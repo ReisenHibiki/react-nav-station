@@ -18,7 +18,7 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { label: "首页热门", icon: "home", type: "scroll", target: "首页热门" },
+  { label: "首页推荐", icon: "home", type: "scroll", target: "首页推荐" },
   { label: "教程百科", icon: "library", type: "scroll", target: "教程百科" },
   { label: "寻找聚落", icon: "village", type: "scroll", target: "寻找聚落" },
   { label: "皮肤站", icon: "awesome", type: "scroll", target: "皮肤站" },
@@ -33,7 +33,7 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function Navbar() {
   const router = useRouter()
-  const [active, setActive] = useState<string>("首页热门")
+  const [active, setActive] = useState<string>("首页推荐")
 
   const handleClick = (item: NavItem) => {
     if (!item.target) return
@@ -53,7 +53,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="w-64 h-screen fixed 
+    <div className="w-64 h-screen fixed
       bg-white/80 backdrop-blur-xl 
       border-r border-slate-200
       shadow-sm">
