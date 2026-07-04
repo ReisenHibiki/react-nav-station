@@ -30,7 +30,7 @@ export default function RootLayout({
     >
       <body className="min-h-screen w-screen flex bg-slate-50">
         
-        <div className="w-60 h-screen">
+        <div className="hidden sm:block sm:w-64 h-screen">
           <Navbar />
         </div>
         
