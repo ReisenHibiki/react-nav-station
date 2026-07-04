@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
+import { FilterDrama, Handshake } from "@mui/icons-material";
 
 type Section = {
   title: string,
@@ -59,6 +60,28 @@ const sections: Section[] = [
 
 export default function Home() {
   const [search, setSearch] = useState("");
+  const [data, setData] = useState<Section[]>(sections);
+
+  const handleSearch = () => {
+    let filteredData: Section[] = []
+    for ( const section of sections) {
+      // 如果没有包含搜索词就直接跳过该section不过滤
+      if (!section.cards.some((card)=>(card.name.toLowerCase().includes(search.toLowerCase())))){
+        continue        
+      }
+
+      const filteredCards = section.cards.filter((card)=>(card.name.includes(search)))
+      filteredData.push({
+        ...section,
+        cards: filteredCards
+      })
+      
+    }
+    // if (filteredData.length === 0){
+    //   filteredData.push({title: "没有找到",cards: []})
+    // }
+    setData(filteredData)
+  }
 
   return (
   <div className="min-h-screen w-full scroll-auto">
@@ -82,13 +105,18 @@ export default function Home() {
           className="flex-1 bg-transparent outline-none px-2 text-slate-700"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch()
+            }
+          }}
         />
 
         <button
           className="p-2 rounded-full bg-blue-500 text-white
           hover:bg-blue-600 active:scale-95
           transition-all duration-200"
-          onClick={() => console.log(search)}
+          onClick={() => handleSearch()}
         >
           <SearchIcon />
         </button>
@@ -97,7 +125,7 @@ export default function Home() {
     
     {/* Sections 内容部分 */}
     <div>
-      {sections.map((section: Section)=>(
+      {data.map((section: Section)=>(
         <div className="w-full flex flex-col gap-4 p-6" 
         key={section.title}
         id={section.title}>
