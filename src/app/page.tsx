@@ -70,7 +70,7 @@ export default function Home() {
         continue        
       }
 
-      const filteredCards = section.cards.filter((card)=>(card.name.includes(search)))
+      const filteredCards = section.cards.filter((card)=>(card.name.toLowerCase().includes(search)))
       filteredData.push({
         ...section,
         cards: filteredCards
