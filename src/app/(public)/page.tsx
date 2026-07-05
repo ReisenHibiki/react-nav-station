@@ -3,6 +3,7 @@
 import { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { FilterDrama, Handshake } from "@mui/icons-material";
+import Link from "next/link";
 
 type Section = {
   title: string,
@@ -134,7 +135,7 @@ export default function Home() {
           {/* card 卡片部分 */}
           <div className="flex flex-wrap gap-4 cursor-pointer">
             {section.cards.map((card) => (
-              <div className="h-32 w-full sm:w-1/2 lg:w-1/5" key={card.id}>
+              <Link href={`/card/${card.id}`} className="h-32 w-full sm:w-1/2 lg:w-1/5" key={card.id}>
                 
                 <div className="w-full h-full bg-white rounded-xl border border-slate-200
                 shadow-sm hover:shadow-lg hover:-translate-y-1
@@ -154,7 +155,7 @@ export default function Home() {
                   <p className="text-xs lg:text-sm text-slate-500 line-clamp-2">{card.description}</p>
                 </div>
               </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

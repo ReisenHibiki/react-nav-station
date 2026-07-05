@@ -39,16 +39,16 @@ export default function Navbar() {
     if (!item.target) return
 
     setActive(item.target)
-
+    const target = item.target
     if (window.location.pathname !== "/") {
       router.push("/")
-      const element = document.getElementById(item.target)
       setTimeout(() => {
+        const element = document.getElementById(target)        
         element?.scrollIntoView({ behavior: "smooth" })
       }, 300)
     } else {
-      const element = document.getElementById(item.target)
-      element?.scrollIntoView({ behavior: "smooth" })
+        const element = document.getElementById(target)
+        element?.scrollIntoView({ behavior: "smooth" })
     }
   }
 
