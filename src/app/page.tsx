@@ -1,5 +1,5 @@
 'use client';
-import Image from "next/image";
+
 import { useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { FilterDrama, Handshake } from "@mui/icons-material";
@@ -10,7 +10,7 @@ type Section = {
     id: number,
     name: string,
     description: string,
-    imageUrl: string,
+    icon?: string | null,
     link: string,    
   }[],
 }
@@ -23,14 +23,14 @@ const sections: Section[] = [
         id: 101,
         name: "MC百科",
         description: "模组百科站",
-        imageUrl: "/images/mcmod.png",
+        icon: "/images/mcmod.cn.png",
         link: "https://www.mcmod.cn"
       },
       {
         id: 102,
         name: " Minecraft 官网",
         description: "Minecraft 官方网站",
-        imageUrl: "/images/minecraft.png",
+        icon: "/images/minecraft.net.png",
         link: "https://www.minecraft.net"
       }
     ]
@@ -42,14 +42,14 @@ const sections: Section[] = [
         id: 201,
         name: "MC百科",
         description: "模组百科站",
-        imageUrl: "/images/mcmod.png",
+        icon: "/images/mcmod.cn.png",
         link: "https://www.mcmod.cn"
       },
       {
         id: 202,
         name: " Minecraft 官网",
         description: "Minecraft 官方网站",
-        imageUrl: "/images/minecraft.png",
+        icon: "/images/minecraft.net.png",
         link: "https://www.minecraft.net"
       }
     ]
@@ -142,7 +142,7 @@ export default function Home() {
                 flex items-center">
                 <div className="w-2/5 flex items-center justify-center">
                   <img
-                  src={`https://www.google.com/s2/favicons?domain=${card.link}&sz=48`}
+                  src={card.icon ?? `https://www.google.com/s2/favicons?domain=${card.link}&sz=48`}
                   alt={card.name}
                   width={60}
                   height={60}
