@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from "next/image"
+import Link from 'next/link';
 
 // icons
 import SetMealIcon from '@mui/icons-material/SetMeal';
@@ -61,12 +62,12 @@ export default function Navbar() {
       <div className="p-5 flex flex-col gap-6">
 
         {/* LOGO */}
-        <div className="flex items-center gap-3 cursor-pointer">
+        <Link href={"/"} className="flex items-center gap-3 cursor-pointer">
           <Image src="/face.png" alt="Logo" width={38} height={38} />
           <span className="font-bold text-lg tracking-wide">
             傻鱼导航站
           </span>
-        </div>
+        </Link>
 
         {/* MENU */}
         <div className="flex flex-col gap-1 mt-2">
