@@ -26,8 +26,8 @@ export const cards = pgTable("cards", {
     .primaryKey()
     .generatedAlwaysAsIdentity(),
 
-  created_at: timestamp("created_at", { withTimezone: true })
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow().notNull(),
 
   name: varchar("name", { length: 255 }).notNull(),
 
@@ -37,7 +37,7 @@ export const cards = pgTable("cards", {
 
   link: text("link").notNull(),
 
-  section_id: bigint("section_id", { mode: "number" }).notNull(),
+  sectionId: bigint("section_id", { mode: "number" }).notNull(),
 
-  featured_order: integer("featured_order"),
+  featuredOrder: integer("featured_order"),
 });
