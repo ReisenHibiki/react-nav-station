@@ -7,69 +7,36 @@ import Link from "next/link";
 
 type Section = {
   title: string,
-  cards: {
-    id: number,
-    name: string,
-    description: string,
-    icon?: string | null,
-    link: string,    
-  }[],
+  sortOrder: number;
+  cards: Card[],
 }
-
-const sections: Section[] = [
-  {
-    title: "首页推荐",
-    cards: [
-      {
-        id: 101,
-        name: "MC百科",
-        description: "模组百科站",
-        icon: "/images/mcmod.cn.png",
-        link: "https://www.mcmod.cn"
-      },
-      {
-        id: 102,
-        name: " Minecraft 官网",
-        description: "Minecraft 官方网站",
-        icon: "/images/minecraft.net.png",
-        link: "https://www.minecraft.net"
-      }
-    ]
-  },
-    {
-    title: "教程百科",
-    cards: [
-      {
-        id: 201,
-        name: "MC百科",
-        description: "模组百科站",
-        icon: "/images/mcmod.cn.png",
-        link: "https://www.mcmod.cn"
-      },
-      {
-        id: 202,
-        name: " Minecraft 官网",
-        description: "Minecraft 官方网站",
-        icon: "/images/minecraft.net.png",
-        link: "https://www.minecraft.net"
-      }
-    ]
-  }
-]
+type Card = {
+  id: number;
+  createdAt: Date;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  link: string;
+  sectionId: number;
+  featuredOrder: number | null;
+};
 
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState<Section[]>([]);
+  // 原始数据
+  const [sections, setSections] = useState<Section[]>([]);
 
   useEffect(()=>{
     async function getCardData() {
       const res = await fetch("/api/cards")
       const data = await res.json()
+      setSections(data)
       setData(data)
     }
     getCardData()
-  })
+  }, [])
 
   const handleSearch = () => {
     let filteredData: Section[] = []

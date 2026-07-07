@@ -15,6 +15,7 @@ type Section = {
     description?: string | null,
     icon?: string | null,
     link: string,    
+    featuredOrder?: number | null;
   }[],
 }
 
@@ -23,7 +24,7 @@ export async function GET() {
     const rows = await db
     .select()
     .from(sections)
-    .leftJoin(cards, eq(sections.id, cards.section_id))
+    .leftJoin(cards, eq(sections.id, cards.sectionId))
     .orderBy(asc(sections.sortOrder))
 
     const data = rows.reduce<Section[]>((acc: Section[], row)=>{
@@ -46,6 +47,20 @@ export async function GET() {
       
       return acc
     }, [])
+
+    // 推荐部分
+    const featuredSection = data.find(
+      section => section.sectionID === 1
+    )
+    if (featuredSection) {
+      const featuredCards = data
+        .flatMap(section => section.cards)
+        .filter(card => card.featuredOrder != null)
+        .sort((a, b) => a.featuredOrder! - b.featuredOrder!)
+
+      featuredSection.cards.push(...featuredCards)
+    }
+
     return NextResponse.json(data)
     
   } catch (error) {

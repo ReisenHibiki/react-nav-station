@@ -1,74 +1,47 @@
-'use client'
 import React from 'react'
-import { useParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
+// import { useParams } from 'next/navigation'
+import Link from 'next/link'
+import getCardDetail from '@/lib/queries/cards'
 
 type Props = {}
 
 type Section = {
   title: string,
-  cards: {
-    id: number,
-    name: string,
-    description: string,
-    icon?: string | null,
-    link: string,    
-  }[],
+  sortOrder: number;
+  cards: Card[],
 }
-const sections: Section[] = [
-  {
-    title: "首页推荐",
-    cards: [
-      {
-        id: 101,
-        name: "MC百科",
-        description: "模组百科站",
-        icon: "/images/mcmod.cn.png",
-        link: "https://www.mcmod.cn"
-      },
-      {
-        id: 102,
-        name: " Minecraft 官网",
-        description: "Minecraft 官方网站",
-        icon: "/images/minecraft.net.png",
-        link: "https://www.minecraft.net"
-      }
-    ]
-  },
-    {
-    title: "教程百科",
-    cards: [
-      {
-        id: 201,
-        name: "MC百科",
-        description: "模组百科站",
-        icon: "/images/mcmod.cn.png",
-        link: "https://www.mcmod.cn"
-      },
-      {
-        id: 202,
-        name: " Minecraft 官网",
-        description: "Minecraft 官方网站",
-        icon: "/images/minecraft.net.png",
-        link: "https://www.minecraft.net"
-      }
-    ]
-  }
-]
+type Card = {
+  id: number;
+  createdAt: Date;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  link: string;
+  sectionId: number;
+  featuredOrder: number | null;
+};
 
-const Card = (props: Props) => {
-    const router = useRouter()
-    const params = useParams()
-    const card_id = params.card_id
+const CardDetail = async({
+  params,
+}: {
+  params: Promise<{ card_id: number }>
+}) => {
+    // const params = useParams()
+    const data = await params
+    const card_id = data.card_id
+    const cardData = await getCardDetail(card_id)
     
-    let cardData = sections.flatMap(section => section.cards).find(card=> card.id.toString() == card_id?.toString())
     // 404 handler
     if(!cardData){
         return <div className='w-full min-h-screen flex flex-col justify-center items-center font-bold'>
         <p>404 Not Found</p>
-        <button className='mt-3 bg-green-300 rounded-2xl p-3 hover:bg-green-600 active:scale-95
-          transition-all duration-200 cursor-pointer'
-        onClick={()=>router.push("/")}>Home</button>
+        <Link
+          href="/"
+          className="mt-3 bg-green-300 rounded-2xl p-3 hover:bg-green-600 active:scale-95
+          transition-all duration-200 cursor-pointer"
+        >
+          Home
+        </Link>
         </div>
                 
     }
@@ -161,4 +134,4 @@ const Card = (props: Props) => {
         </div>
     )
 }
-export default Card
+export default CardDetail
