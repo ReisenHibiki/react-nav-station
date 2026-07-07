@@ -29,15 +29,15 @@ export const cards = pgTable("cards", {
   created_at: timestamp("created_at", { withTimezone: true })
     .defaultNow(),
 
-  name: varchar("name", { length: 255 }),
+  name: varchar("name", { length: 255 }).notNull(),
 
   description: text("description"),
 
   icon: text("icon"),
 
-  link: text("link"),
+  link: text("link").notNull(),
 
-  section_id: bigint("section_id", { mode: "number" }),
+  section_id: bigint("section_id", { mode: "number" }).notNull(),
 
   featured_order: integer("featured_order"),
 });

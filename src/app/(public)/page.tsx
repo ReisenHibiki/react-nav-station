@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { FilterDrama, Handshake } from "@mui/icons-material";
 import Link from "next/link";
@@ -58,10 +58,18 @@ const sections: Section[] = [
 ]
 
 
-
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [data, setData] = useState<Section[]>(sections);
+  const [data, setData] = useState<Section[]>([]);
+
+  useEffect(()=>{
+    async function getCardData() {
+      const res = await fetch("/api/cards")
+      const data = await res.json()
+      setData(data)
+    }
+    getCardData()
+  })
 
   const handleSearch = () => {
     let filteredData: Section[] = []
