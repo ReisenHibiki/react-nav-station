@@ -100,7 +100,7 @@ export default function Home() {
     </div>
     
     {/* Sections 内容部分 */}
-    <div>
+    <div className="bg-white">
       {data.map((section: Section)=>(
         <div className="w-full flex flex-col gap-4 p-6" 
         key={section.title}
