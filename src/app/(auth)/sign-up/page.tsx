@@ -3,7 +3,6 @@
 import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client"
 
 
 export default function SignUpPage() {
@@ -20,7 +19,10 @@ export default function SignUpPage() {
     email: "",
     password: "",
   });
-
+  // 后端返回消息BackEnd Message
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false)
+  
 
 
   // 更新表单数据
@@ -44,7 +46,7 @@ export default function SignUpPage() {
 
 
 
-  const handleSubmit = (
+  const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
 
@@ -59,18 +61,18 @@ export default function SignUpPage() {
 
 
     // 表单验证
-    if (!form.userId) {
-      newErrors.userId = "请输入用户ID";
+    if (!form.userId || form.userId.length < 3) {
+      newErrors.userId = "用户ID长度不得小于3";
     }
 
 
-    if (!form.email.includes("@")) {
-      newErrors.email = "请输入正确邮箱";
+    if (!form.email.includes("@qq.com")) {
+      newErrors.email = "请输入有效的QQ邮箱";
     }
 
 
-    if (form.password.length < 6) {
-      newErrors.password = "密码至少6位";
+    if (!/^[A-Za-z0-9!@#$%^&*]{8,}$/.test(form.password)) {
+      newErrors.password = "密码至少8位，只能包含英文、数字和特殊字符";
     }
 
 
@@ -83,23 +85,42 @@ export default function SignUpPage() {
     ) {
 
       console.log("注册数据:", form);
-
-      // Supabase
-      const supabase = createClient()
-      async function HandleSignUp() {
-        const {data, error} = await supabase.auth.signUp({
+      // 接口
+      try {
+      const res = await fetch("/api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: form.userId,
           email: form.email,
-          password: form.password
-        })
-        console.log(data)
-        console.log("******")
-        console.log(error)
-      }
-      HandleSignUp()
-    }
+          password: form.password,
+        }),
+      });
+      const data = await res.json();
 
+      // 判断请求是否失败
+      if (res.ok) {
+        setSuccess(true)    
+      }
+        setSuccess(false)        
+      // 接收后端 message  
+      setMessage(data.message);
+      setTimeout(() => {
+        setMessage("");
+      }, 5000);
+
+    } catch (error) {
+      setSuccess(false)
+      setMessage("请求错误");
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    }}
   };
 
+  // render渲染部分
   return (
     <main
       className="
@@ -111,7 +132,27 @@ export default function SignUpPage() {
       px-4
       "
     >
-
+      {/* 后端Message气泡代码 */}
+            {
+        message &&
+        <div
+          className={`
+          fixed
+          top-5
+          right-5
+          z-50
+          rounded-lg
+        ${success?"bg-green-400":"bg-red-400"}
+          px-5
+          py-3
+          text-white
+          shadow-lg
+          `}
+        >
+          {message}
+        </div>
+      }
+      {/* 气泡代码结束 */}
       <div
         className="
         w-full
@@ -159,12 +200,12 @@ export default function SignUpPage() {
             value={form.userId}
             error={errors.userId}
             onChangeFather={(value) =>
-              updateField("userId", value)
+              updateField("userId", value.replace(/[^a-zA-Z0-9]/g, ""))
             }
           />
           <AuthInput
             label="邮箱"
-            placeholder="example@email.com"
+            placeholder="example@qq.com"
             value={form.email}
             error={errors.email}
             onChangeFather={(value) =>
