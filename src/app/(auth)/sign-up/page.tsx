@@ -3,6 +3,7 @@
 import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client"
 
 
 export default function SignUpPage() {
@@ -83,7 +84,18 @@ export default function SignUpPage() {
 
       console.log("注册数据:", form);
 
-      // 后续接 Supabase
+      // Supabase
+      const supabase = createClient()
+      async function HandleSignUp() {
+        const {data, error} = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password
+        })
+        console.log(data)
+        console.log("******")
+        console.log(error)
+      }
+      HandleSignUp()
     }
 
   };
