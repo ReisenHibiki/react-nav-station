@@ -3,6 +3,7 @@
 import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 export default function SignUpPage() {
@@ -22,7 +23,7 @@ export default function SignUpPage() {
   // 后端返回消息BackEnd Message
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false)
-  
+  const router = useRouter()
 
 
   // 更新表单数据
@@ -103,13 +104,19 @@ export default function SignUpPage() {
       // 判断请求是否失败
       if (res.ok) {
         setSuccess(true)    
+        setMessage(data.message);
+        setTimeout(() => {
+          setMessage("");
+          router.replace('/sign-in')
+        }, 4000);        
+      } else {
+        setSuccess(false)          
       }
-        setSuccess(false)        
       // 接收后端 message  
       setMessage(data.message);
       setTimeout(() => {
         setMessage("");
-      }, 5000);
+      }, 4000);
 
     } catch (error) {
       setSuccess(false)
@@ -264,6 +271,10 @@ export default function SignUpPage() {
             登录
           </Link>
         </p>
+
+      <Link href={'/'} className="flex justify-center hover:underline font-extralight mt-2">
+        返回主页
+      </Link>        
 
       </div>
 
