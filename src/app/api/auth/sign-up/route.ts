@@ -61,7 +61,7 @@ try {
     } else {
         return NextResponse.json(
       {
-        message: "已发送邮件，请到邮箱确认",
+        message: "已发送邮件，请到邮箱确认，跳转中",
         user:{
             username
         }
