@@ -4,134 +4,110 @@ import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
-
-export default function SignUpPage() {
+export default function SignInPage() {
+  const supabase = createClient();
+  const router = useRouter();
 
   const [form, setForm] = useState({
-    userId: "",
     email: "",
     password: "",
   });
-
 
   const [errors, setErrors] = useState({
-    userId: "",
     email: "",
     password: "",
   });
-  // 后端返回消息BackEnd Message
+
   const [message, setMessage] = useState("");
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
 
-
-  // 更新表单数据
   const updateField = (
     key: keyof typeof form,
     value: string
   ) => {
-
     setForm({
       ...form,
       [key]: value,
     });
 
-
-    // 输入后清除当前错误
     setErrors({
       ...errors,
       [key]: "",
     });
   };
 
-
-
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
-
     e.preventDefault();
 
-
     const newErrors = {
-      userId: "",
       email: "",
       password: "",
     };
 
-
-    // 表单验证
-    if (!form.userId || form.userId.length < 3) {
-      newErrors.userId = "用户ID长度不得小于3";
+    // 检查是否为空
+    if (!form.email.trim()) {
+      newErrors.email = "请输入邮箱";
     }
 
-
-    if (!form.email.includes("@qq.com")) {
-      newErrors.email = "请输入有效的QQ邮箱";
+    if (!form.password.trim()) {
+      newErrors.password = "请输入密码";
     }
-
-
-    if (!/^[A-Za-z0-9!@#$%^&*]{8,}$/.test(form.password)) {
-      newErrors.password = "密码至少8位，只能包含英文、数字和特殊字符";
-    }
-
 
     setErrors(newErrors);
 
-    // 验证不通过,
-    if (
-      !Object.values(newErrors)
-        .every(error => error === "")
-    ) {return}
-      // 验证通过
-      // 接口
-      setLoading(true)
-      try {
-      const res = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: form.userId,
-          email: form.email,
-          password: form.password,
-        }),
-      });
-      const data = await res.json();
+    if (!Object.values(newErrors).every((error) => error === "")) {
+      return;
+    }
 
-      // 判断请求是否失败
-      if (res.ok) {
-        setSuccess(true);
-      } else {
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (error) {
         setSuccess(false);
+        if(error.message === 'Invalid login credentials'){
+            setMessage('账号或密码错误')          
+        }else{
+            setMessage(error.message) 
+        }
+
+
+        setTimeout(() => {
+          setMessage("");
+        }, 4000);
+
+        return;
       }
 
-      setMessage(data.message);
+      setSuccess(true);
+      setMessage("登录成功，正在跳转...");
+
+      setTimeout(() => {
+        router.replace("/");
+        router.refresh();
+      }, 1000);
+
+    } catch {
+      setSuccess(false);
+      setMessage("登录失败，请稍后重试");
 
       setTimeout(() => {
         setMessage("");
-
-        if (res.ok) {
-          router.replace("/sign-in");
-        }
       }, 4000);
-
-    } catch (error) {
-      console.error(error)
-      setSuccess(false)
-      setMessage("请求错误");
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
     } finally {
       setLoading(false);
     }
   };
 
-  // render渲染部分
   return (
     <main
       className="
@@ -143,9 +119,7 @@ export default function SignUpPage() {
       px-4
       "
     >
-      {/* 后端Message气泡代码 */}
-            {
-        message &&
+      {message && (
         <div
           className={`
           fixed
@@ -153,7 +127,7 @@ export default function SignUpPage() {
           right-5
           z-50
           rounded-lg
-        ${success?"bg-green-400":"bg-red-400"}
+          ${success ? "bg-green-400" : "bg-red-400"}
           px-5
           py-3
           text-white
@@ -162,8 +136,8 @@ export default function SignUpPage() {
         >
           {message}
         </div>
-      }
-      {/* 气泡代码结束 */}
+      )}
+
       <div
         className="
         w-full
@@ -174,10 +148,7 @@ export default function SignUpPage() {
         shadow-xl
         "
       >
-
-        {/* 标题 */}
         <div className="mb-8 text-center">
-
           <h1
             className="
             text-2xl
@@ -185,7 +156,7 @@ export default function SignUpPage() {
             text-gray-900
             "
           >
-            创建账号
+            欢迎回来
           </h1>
 
           <p
@@ -195,25 +166,14 @@ export default function SignUpPage() {
             text-gray-500
             "
           >
-            注册账号开始你的旅程
+            登录账号继续你的旅程
           </p>
-
         </div>
 
         <form
           onSubmit={handleSubmit}
           className="space-y-5"
         >
-
-          <AuthInput
-            label="游戏ID"
-            placeholder="请输入正版游戏ID"
-            value={form.userId}
-            error={errors.userId}
-            onChangeFather={(value) =>
-              updateField("userId", value.replace(/[^a-zA-Z0-9]/g, ""))
-            }
-          />
           <AuthInput
             label="邮箱"
             placeholder="example@qq.com"
@@ -223,6 +183,7 @@ export default function SignUpPage() {
               updateField("email", value)
             }
           />
+
           <AuthInput
             label="密码"
             placeholder="请输入密码"
@@ -248,13 +209,12 @@ export default function SignUpPage() {
             transition
             hover:bg-gray-800
             active:scale-[0.98]
-            disabled:opacity-50
             disabled:cursor-not-allowed
+            disabled:bg-gray-400
             "
           >
-            {loading ? "注册中..." : "注册"}
+            {loading ? "登录中..." : "登录"}
           </button>
-
         </form>
 
         <p
@@ -265,8 +225,9 @@ export default function SignUpPage() {
           text-gray-500
           "
         >
-          已有账号？
-          <Link href={"/sign-in"}
+          还没有账号？
+          <Link
+            href="/sign-up"
             className="
             ml-1
             cursor-pointer
@@ -275,16 +236,23 @@ export default function SignUpPage() {
             hover:underline
             "
           >
-            登录
+            注册
           </Link>
         </p>
 
-      <Link href={'/'} className="flex justify-center hover:underline font-extralight mt-2">
-        返回主页
-      </Link>        
-
+        <Link
+          href="/"
+          className="
+          mt-2
+          flex
+          justify-center
+          font-extralight
+          hover:underline
+          "
+        >
+          返回主页
+        </Link>
       </div>
-
     </main>
   );
 }
