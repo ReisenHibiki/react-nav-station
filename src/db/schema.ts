@@ -37,7 +37,7 @@ export const cards = pgTable("cards", {
 
   link: text("link").notNull(),
 
-  sectionId: bigint("section_id", { mode: "number" }).notNull(),
+  sectionId: bigint("section_id", { mode: "number" }).references(()=>sections.id).notNull(),
 
   featuredOrder: integer("featured_order"),
 });
