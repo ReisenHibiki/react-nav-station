@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
 
 export async function POST(req: Request) {
   try{
@@ -24,10 +26,16 @@ export async function POST(req: Request) {
     );
   }
 
-  // 返回成功response
+  // 利用onConflictDoNothing检查profile如不存在则新建
+  await db.insert(profiles)
+    .values({
+      id: data.user.id,
+      username: data.user.user_metadata.username,
+    })
+    .onConflictDoNothing();
+
   return NextResponse.json({
     success: true,
-    user: data.user,
   },{status:200});
 
    }catch{
