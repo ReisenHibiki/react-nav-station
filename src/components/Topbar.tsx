@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/Avatar";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
 
 type Props = {
 };
@@ -16,7 +17,25 @@ const Topnav = ({}: Props) => {
   const [avatar, setAvatar] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   
+  const router = useRouter()
   const menuRef = useRef<HTMLDivElement>(null);
+
+    // 登出退出登录处理
+  const handleSignOut = async ()=>{
+    try {
+          setIsLoading(true)      
+      const res = await fetch('/api/auth/sign-out')
+      if(res.ok){
+          setIslogin(false)
+          router.replace("/");
+          router.refresh();
+          return;
+      }
+    } finally{
+        setIsLoading(false)   
+    }
+
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -127,8 +146,7 @@ const Topnav = ({}: Props) => {
               <button
                 onClick={() => {
                   setOpen(false);
-
-                  // TODO: Supabase SignOut
+                  handleSignOut();
                 }}
                 className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition"
               >
