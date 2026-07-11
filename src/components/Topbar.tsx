@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/Avatar";
+import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   isLogin?: boolean;
@@ -11,11 +12,13 @@ type Props = {
 };
 
 const Topnav = ({
-  isLogin = false,
-  username = "Henry",
   avatar = "",
 }: Props) => {
+  // useState
   const [open, setOpen] = useState(false);
+  const [isLogin, setIslogin] = useState(false)
+  const [username, setUsername] = useState("")
+  
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,8 +30,19 @@ const Topnav = ({
         setOpen(false);
       }
     }
-
+    // 安装监听
     document.addEventListener("mousedown", handleClickOutside);
+    // supabase检查是否登录
+    const checkLogin = async()=>{
+        const supabase = await createClient();
+        const { data: { user },}  = await supabase.auth.getUser();
+        if (!user) {
+          setIslogin(false)
+          return
+        }
+        // 已登录
+
+    }
 
     // 清理函数，负责销毁时或再次触发useEffect时清理
     return () => {
