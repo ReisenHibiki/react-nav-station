@@ -3,21 +3,18 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/Avatar";
-import { createClient } from "@/lib/supabase/client";
+import Loading from "@/components/Loading";
 
 type Props = {
-  isLogin?: boolean;
-  username?: string;
-  avatar?: string;
 };
 
-const Topnav = ({
-  avatar = "",
-}: Props) => {
+const Topnav = ({}: Props) => {
   // useState
   const [open, setOpen] = useState(false);
   const [isLogin, setIslogin] = useState(false)
   const [username, setUsername] = useState("")
+  const [avatar, setAvatar] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -32,17 +29,26 @@ const Topnav = ({
     }
     // 安装监听
     document.addEventListener("mousedown", handleClickOutside);
-    // supabase检查是否登录
+    // 接口检查是否登录
     const checkLogin = async()=>{
-        const supabase = await createClient();
-        const { data: { user },}  = await supabase.auth.getUser();
-        if (!user) {
+      try{
+        const res = await fetch('/api/profile')
+        if(!res.ok){
           setIslogin(false)
-          return
+          return;
         }
         // 已登录
-
+        const profile = await res.json();
+        setUsername(profile.username)
+        if (profile.avatar){setAvatar(profile.avatar)} 
+        setIslogin(true)
+      } catch {
+        setIslogin(false)
+      } finally {
+        setIsLoading(false)
+      }
     }
+    checkLogin()
 
     // 清理函数，负责销毁时或再次触发useEffect时清理
     return () => {
@@ -61,8 +67,10 @@ const Topnav = ({
         欢迎来到傻鱼导航站
       </div>
 
-      {/* Right */}
-      {isLogin ? (
+      {/* Right右侧用户小菜单 */}
+      {isLoading ? <Loading /> : 
+      // 结束Loading时
+      isLogin ? (
         <div className="relative" ref={menuRef}>
             <div className="flex gap-1">
             <Avatar

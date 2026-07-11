@@ -8,8 +8,8 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen w-screen flex bg-slate-50">
-      <div className="hidden sm:block sm:w-64 h-screen">
+    <div className="min-h-screen flex bg-slate-50">
+      <div className="hidden sm:block sm:w-64 h-screen shrink-0">
         <Navbar />
       </div>
 

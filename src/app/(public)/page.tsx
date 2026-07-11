@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import SearchIcon from '@mui/icons-material/Search';
 import { FilterDrama, Handshake } from "@mui/icons-material";
 import Link from "next/link";
+import Loading from "@/components/Loading";
+import { cards } from "@/db/schema";
+import { title } from "process";
 
 type Section = {
   title: string,
@@ -27,13 +30,23 @@ export default function Home() {
   const [data, setData] = useState<Section[]>([]);
   // 原始数据
   const [sections, setSections] = useState<Section[]>([]);
+   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(()=>{
     async function getCardData() {
-      const res = await fetch("/api/cards")
-      const data = await res.json()
-      setSections(data)
-      setData(data)
+      try{
+        const res = await fetch("/api/cards")
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error("获取数据失败");
+        }
+        setSections(data)
+        setData(data)
+      } catch {
+        setData([{title:"获取数据失败",sortOrder:0, cards: []}])
+      } finally {
+        setIsLoading(false)
+      }
     }
     getCardData()
   }, [])
@@ -60,7 +73,7 @@ export default function Home() {
   }
 
   return (
-  <div className="min-h-screen w-full scroll-auto">
+  <div className="min-h-screen w-full scroll-auto bg-white">
     {/* SearchBar 搜索栏*/}
       <div className="w-full h-72 flex flex-col items-center justify-center bg-linear-to-b from-slate-200 to-white">
 
@@ -100,6 +113,7 @@ export default function Home() {
     </div>
     
     {/* Sections 内容部分 */}
+    {isLoading ? <Loading size='lg' /> : 
     <div className="bg-white">
       {data.map((section: Section)=>(
         <div className="w-full flex flex-col gap-4 p-6" 
@@ -110,7 +124,7 @@ export default function Home() {
           {/* card 卡片部分 */}
           <div className="flex flex-wrap gap-4 cursor-pointer">
             {section.cards.map((card) => (
-              <Link href={`/card/${card.id}`} className="h-32 w-full sm:w-1/2 lg:w-1/5" key={card.id}>
+              <Link href={`/card/${card.id}`} className="h-32 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(20%-0.8rem)]" key={card.id}>
                 
                 <div className="w-full h-full bg-white rounded-xl border border-slate-200
                 shadow-sm hover:shadow-lg hover:-translate-y-1
@@ -135,7 +149,7 @@ export default function Home() {
           </div>
         </div>
       ))}
-    </div>
+    </div>}
 
 
     <div>
