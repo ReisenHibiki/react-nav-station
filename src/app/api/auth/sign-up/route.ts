@@ -48,7 +48,12 @@ try {
     const supabase = await createClient()
     const {data, error} = await supabase.auth.signUp({
         email: email,
-        password: password
+        password: password,
+        options: {
+          data: {
+            username,
+        },
+      },
     })
     if (error) {
         return NextResponse.json(
@@ -61,7 +66,7 @@ try {
     } else {
         return NextResponse.json(
       {
-        message: "已发送邮件，请到邮箱确认，跳转中",
+        message: "已发送邮件，请到邮箱确认，跳转至登录中...",
         user:{
             username
         }

@@ -1,13 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 export default function SignInPage() {
-  const supabase = createClient();
+
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -63,31 +61,38 @@ export default function SignInPage() {
     if (!Object.values(newErrors).every((error) => error === "")) {
       return;
     }
-
+    //检查完成开始登录进程
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: form.email,
-        password: form.password,
+      const res = await fetch ("/api/auth/sign-in",{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        })
       });
 
-      if (error) {
+      const result = await res.json()
+
+      // 登录失败
+      if (!res.ok) {
         setSuccess(false);
-        if(error.message === 'Invalid login credentials'){
+        if(result.error === 'Invalid login credentials'){
             setMessage('账号或密码错误')          
         }else{
-            setMessage(error.message) 
+            setMessage(result.error) 
         }
-
-
         setTimeout(() => {
           setMessage("");
         }, 4000);
 
         return;
       }
-
+      // 登录成功
       setSuccess(true);
       setMessage("登录成功，正在跳转...");
 
