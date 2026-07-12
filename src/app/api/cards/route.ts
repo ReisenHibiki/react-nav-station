@@ -2,21 +2,15 @@
 
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { sections, cards } from "@/db/schema";
+import { sections, cards, settlements } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
+import {  Card, SettlementCard, ResourceCard  } from "@/types/card"
 
 type Section = {
   sectionID: number,
   title: string,
   sortOrder: number,
-  cards: {
-    id: number,
-    name: string,
-    description?: string | null,
-    icon?: string | null,
-    link: string,    
-    featuredOrder?: number | null;
-  }[],
+  cards: Card[],
 }
 
 export async function GET() {
@@ -25,6 +19,7 @@ export async function GET() {
     .select()
     .from(sections)
     .leftJoin(cards, eq(sections.id, cards.sectionId))
+    .leftJoin(settlements, eq(settlements.cardId, cards.id))
     .orderBy(asc(sections.sortOrder))
 
     const data = rows.reduce<Section[]>((acc: Section[], row)=>{
@@ -41,9 +36,23 @@ export async function GET() {
 
       }
 
-      if(row.cards){
-        section.cards.push(row.cards)
+    if (row.cards) {
+      
+      if (row.cards.type === "settlement" && row.settlements) {
+        const card: SettlementCard = {
+          ...row.cards,
+          type: "settlement",
+          settlement: row.settlements,
+        };
+        section.cards.push(card);
+      } else {
+        const card : ResourceCard = { 
+          ...row.cards,
+          type: "resource"
+         };  
+        section.cards.push(card);
       }
+    }
       
       return acc
     }, [])

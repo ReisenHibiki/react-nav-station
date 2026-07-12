@@ -40,6 +40,8 @@ export const cards = pgTable("cards", {
   sectionId: bigint("section_id", { mode: "number" }).references(()=>sections.id).notNull(),
 
   featuredOrder: integer("featured_order"),
+  
+  type: varchar("type", {length: 30}).notNull()
 });
 
 // 用户profile表
@@ -94,7 +96,7 @@ export const settlements = pgTable("settlements", {
     .references(() => cards.id),
 
   // 创建者（profiles.id）
-  creatorId: uuid("creator_id")
+  userId: uuid("user_id")
   .notNull(),
 
   // 聚落横幅图片
@@ -112,4 +114,5 @@ export const settlements = pgTable("settlements", {
   })
     .defaultNow()
     .notNull(),
+  status: varchar("status", { length: 30 }).notNull()
 });

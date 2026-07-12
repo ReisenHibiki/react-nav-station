@@ -2,27 +2,15 @@
 
 import { useState, useEffect } from "react";
 import SearchIcon from '@mui/icons-material/Search';
-import { FilterDrama, Handshake } from "@mui/icons-material";
 import Link from "next/link";
 import Loading from "@/components/Loading";
-import { cards } from "@/db/schema";
-import { title } from "process";
+import {Card} from "@/types/card"
 
 type Section = {
   title: string,
   sortOrder: number;
   cards: Card[],
 }
-type Card = {
-  id: number;
-  createdAt: Date;
-  name: string;
-  description: string | null;
-  icon: string | null;
-  link: string;
-  sectionId: number;
-  featuredOrder: number | null;
-};
 
 
 export default function Home() {
@@ -42,6 +30,9 @@ export default function Home() {
         }
         setSections(data)
         setData(data)
+        // 打印检查数据
+        console.log(data)
+
       } catch {
         setData([{title:"获取数据失败",sortOrder:0, cards: []}])
       } finally {
@@ -66,9 +57,9 @@ export default function Home() {
       })
       
     }
-    // if (filteredData.length === 0){
-    //   filteredData.push({title: "没有找到",cards: []})
-    // }
+    if (filteredData.length === 0){
+      filteredData.push({title: "没有搜索结果",cards: [],sortOrder:0})
+    }
     setData(filteredData)
   }
 
