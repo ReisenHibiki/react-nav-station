@@ -1,7 +1,7 @@
-// cards.type
-export type CardType =
-  | "resource"
-  | "settlement";
+export const CARD_TYPE = {
+  RESOURCE: "resource",
+  SETTLEMENT: "settlement",
+} as const;
 
 // 所有 Card 共有字段
 export type BaseCard = {
@@ -30,17 +30,23 @@ export type SettlementInfo = {
   createdAt: Date;
   updatedAt: Date;
 
-  status: string ;
+  status: (typeof SETTLEMENT_STATUS)[keyof typeof SETTLEMENT_STATUS] ;
 };
+// SettlementInfo中status种类约束
+export const SETTLEMENT_STATUS = {
+  RECRUITING: "recruiting",
+  ACTIVE: "active",
+  AFK: "afk",
+} as const;
 
 // 普通资源卡
 export type ResourceCard = BaseCard & {
-  type: "resource";
+  type: typeof CARD_TYPE.RESOURCE;
 };
 
 // 聚落卡
 export type SettlementCard = BaseCard & {
-  type: "settlement";
+  type: typeof CARD_TYPE.SETTLEMENT;
   settlement: SettlementInfo;
 };
 
