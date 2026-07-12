@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Link from "next/link";
 import Loading from "@/components/Loading";
 import {Card} from "@/types/card"
+import CardRenderer from "@/components/cards/CardRenderer";
 
 type Section = {
   title: string,
@@ -114,29 +115,14 @@ export default function Home() {
 
           {/* card 卡片部分 */}
           <div className="flex flex-wrap gap-4 cursor-pointer">
+            {/* 封装组件复用代码 */}
             {section.cards.map((card) => (
-              <Link href={`/card/${card.id}`} className="h-32 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(20%-0.8rem)]" key={card.id}>
-                
-                <div className="w-full h-full bg-white rounded-xl border border-slate-200
-                shadow-sm hover:shadow-lg hover:-translate-y-1
-                transition-all duration-200
-                flex items-center">
-                <div className="w-2/5 flex items-center justify-center">
-                  <img
-                  src={card.icon ?? `https://www.google.com/s2/favicons?domain=${card.link}&sz=48`}
-                  alt={card.name}
-                  width={60}
-                  height={60}
-                  className="rounded-lg"
-                  />
-                </div>
-                <div className="flex flex-col w-3/5 p-2">
-                  <p className="text-sm lg:text-base font-semibold text-slate-800 line-clamp-1">{card.name}</p>
-                  <p className="text-xs lg:text-sm text-slate-500 line-clamp-2">{card.description}</p>
-                </div>
-              </div>
-              </Link>
+              <CardRenderer
+                key={card.id}
+                card={card}
+              />
             ))}
+
           </div>
         </div>
       ))}

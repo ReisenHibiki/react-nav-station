@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { sections, cards, settlements } from "@/db/schema";
 import { asc, eq } from "drizzle-orm";
-import {  Card, SettlementCard, ResourceCard  } from "@/types/card"
+import {  Card, SettlementCard, ResourceCard, CARD_TYPE, SettlementInfo  } from "@/types/card"
 
 type Section = {
   sectionID: number,
@@ -38,17 +38,17 @@ export async function GET() {
 
     if (row.cards) {
       
-      if (row.cards.type === "settlement" && row.settlements) {
+      if (row.cards.type === CARD_TYPE.SETTLEMENT && row.settlements) {
         const card: SettlementCard = {
           ...row.cards,
-          type: "settlement",
-          settlement: row.settlements,
+          type: CARD_TYPE.SETTLEMENT,
+          settlement: row.settlements as SettlementInfo,
         };
         section.cards.push(card);
       } else {
         const card : ResourceCard = { 
           ...row.cards,
-          type: "resource"
+          type: CARD_TYPE.RESOURCE
          };  
         section.cards.push(card);
       }
