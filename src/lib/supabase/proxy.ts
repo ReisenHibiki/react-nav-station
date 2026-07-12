@@ -1,6 +1,10 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+// 要保护的路由地址名称
+const protectedRoutes = [
+  "/dashboard",
+];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -42,10 +46,13 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
 
   const user = data?.claims
-
+  // 自己增加的判断代码开始
+  const isProtected = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+  // 自己增加的代码结束
   if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/')
+    !user && isProtected
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()

@@ -136,7 +136,7 @@ const Topnav = ({}: Props) => {
               </div>
 
               <Link
-                href="/profile"
+                href="/dashboard/profile"
                 className="block px-4 py-3 text-sm hover:bg-gray-100 transition"
                 onClick={() => setOpen(false)}
               >
