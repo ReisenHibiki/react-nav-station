@@ -47,7 +47,7 @@ export const cards = pgTable("cards", {
 // 用户profile表
 export const profiles = pgTable("profiles", {
   // 与 auth.users.id 保持一致
-  id: uuid("id").primaryKey(),
+  id: uuid("user_id").primaryKey(),
 
   // 用户昵称
   username: varchar("username", { length: 30 }).notNull().unique(),

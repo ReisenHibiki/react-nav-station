@@ -38,10 +38,12 @@ export async function POST(req: Request) {
     success: true,
   },{status:200});
 
-   }catch{
+   }catch(err){
+    console.error("login error:", err)
     return NextResponse.json(
       {
-        error: "服务器错误"
+        error: "服务器错误",
+        detail: err instanceof Error ? err.message : String(err)
       },
       {
         status: 500,
