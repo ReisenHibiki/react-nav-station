@@ -81,7 +81,7 @@ export default function SettlementCard({ card }: Props) {
           <img
             src={
               card.icon ??
-              `https://www.google.com/s2/favicons?domain=${card.link}&sz=48`
+              "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/VallNeko.png"
             }
             alt={card.name}
             width={60}

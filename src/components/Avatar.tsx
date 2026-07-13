@@ -16,7 +16,7 @@ const Avatar = ({
       <img
         src={avatar}
         alt="avatar"
-        className={`w-9 h-9 object-cover border cursor-default ${className}`}
+        className={`w-9 h-9 object-cover cursor-default ${className}`}
       />
     );
   }
