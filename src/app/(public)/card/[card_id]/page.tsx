@@ -2,7 +2,10 @@ import React from 'react'
 // import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import getCardDetail from '@/lib/queries/cards'
-
+import { CARD_TYPE } from "@/types/card";
+import ResourceDetail from "@/components/cardDetail/ResourceDetail";
+import SettlementDetail from "@/components/cardDetail/SettlementDetail";
+import {Card} from "@/types/card"
 type Props = {}
 
 type Section = {
@@ -10,16 +13,6 @@ type Section = {
   sortOrder: number;
   cards: Card[],
 }
-type Card = {
-  id: number;
-  createdAt: Date;
-  name: string;
-  description: string | null;
-  icon: string | null;
-  link: string;
-  sectionId: number;
-  featuredOrder: number | null;
-};
 
 const CardDetail = async({
   params,
@@ -46,92 +39,13 @@ const CardDetail = async({
                 
     }
 
-    return (
-        <div className="w-full min-h-screen bg-gray-50 flex justify-center py-10">
-        <div className="w-full max-w-3xl px-6">
+    switch (cardData.type) {
+        case CARD_TYPE.SETTLEMENT:
+        return <SettlementDetail card={cardData} />;
 
-            {/* 上面的card卡片 */}
-            <div className="bg-white rounded-2xl shadow-md p-8">
-
-            {/* 网站信息 Info */}
-            <div className="flex items-center gap-5">
-                <img
-                src={
-                    cardData.icon ??
-                    `https://www.google.com/s2/favicons?domain=${cardData.link}&sz=48`
-                }
-                alt={cardData.name}
-                width={64}
-                height={64}
-                className="rounded-xl"
-                />
-
-                <div>
-                <h1 className="text-3xl font-bold">
-                    {cardData.name}
-                </h1>
-
-                <p className="text-gray-500 mt-1">
-                    {cardData.link}
-                </p>
-                </div>
-            </div>
-
-            {/* 按钮 Button */}
-            <div className="mt-8">
-                <a
-                href={cardData.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    rounded-xl
-                    bg-blue-600
-                    px-6
-                    py-3
-                    text-white
-                    font-medium
-                    hover:bg-blue-700
-                    transition
-                "
-                >
-                立即访问
-                </a>
-            </div>
-
-            {/* 描述 */}
-            <div className="mt-8">
-                <h2 className="text-xl font-semibold mb-3">
-                网站介绍
-                </h2>
-
-                <p className="text-gray-600 leading-8">
-                {cardData.description}
-                </p>
-            </div>
-            </div>
-
-            {/* AD 广告位 */}
-            <div className="
-            mt-8
-            h-40
-            rounded-2xl
-            border-2
-            border-dashed
-            border-gray-300
-            flex
-            items-center
-            justify-center
-            text-gray-400
-            bg-white
-            ">
-            广告位
-            </div>
-
-        </div>
-        </div>
-    )
+        case CARD_TYPE.RESOURCE:
+        default:
+        return <ResourceDetail card={cardData} />;
+    }
 }
 export default CardDetail

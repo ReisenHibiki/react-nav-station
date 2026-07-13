@@ -3,6 +3,9 @@ export const CARD_TYPE = {
   SETTLEMENT: "settlement",
 } as const;
 
+export type CardType =
+  typeof CARD_TYPE[keyof typeof CARD_TYPE];
+
 // 所有 Card 共有字段
 export type BaseCard = {
   id: number;
@@ -38,6 +41,8 @@ export const SETTLEMENT_STATUS = {
   ACTIVE: "active",
   AFK: "afk",
 } as const;
+export type StatusType =
+  typeof SETTLEMENT_STATUS[keyof typeof SETTLEMENT_STATUS];
 
 // 普通资源卡
 export type ResourceCard = BaseCard & {
