@@ -59,10 +59,6 @@ export const profiles = pgTable("profiles", {
   role: varchar("role", { length: 20 })
     .default("user")
     .notNull(),
-  // 当前所属聚落（可为空）
-  settlementId: bigint("settlement_id", {
-    mode: "number",
-  }).references(() => settlements.id),
   // 加入聚落时间
   joinedAt: timestamp("joined_at", {
     withTimezone: true,
@@ -96,8 +92,8 @@ export const settlements = pgTable("settlements", {
     .references(() => cards.id),
 
   // 创建者（profiles.id）
-  userId: uuid("user_id")
-  .notNull(),
+  createdBy: uuid("created_by")
+  .notNull().references(()=> profiles.id),
 
   // 聚落横幅图片
   banner: text("banner"),
@@ -116,3 +112,41 @@ export const settlements = pgTable("settlements", {
     .notNull(),
   status: varchar("status", { length: 30 }).$type<StatusType>().notNull()
 });
+
+
+export const settlementMembers = pgTable("settlement_members", {
+
+  id: bigint("id", {
+    mode:"number"
+  })
+  .primaryKey()
+  .generatedAlwaysAsIdentity(),
+
+
+  settlementId: bigint("settlement_id", {
+    mode:"number"
+  })
+  .notNull()
+  .references(()=>settlements.id),
+
+
+  userId: uuid("user_id")
+  .notNull()
+  .references(()=>profiles.id),
+
+
+  role: varchar("role", {
+    length:20
+  })
+  .$type<"owner"|"member">()
+  .notNull()
+  .default("member"),
+
+
+  joinedAt: timestamp("joined_at",{
+    withTimezone:true
+  })
+  .defaultNow()
+  .notNull()
+
+})
