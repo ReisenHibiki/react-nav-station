@@ -9,7 +9,7 @@ import {
   profiles
 } from "@/db/schema";
 
-// 查询聚落 GET
+// 查询用户所在聚落 GET
 export async function GET(){
   const supabase = await createClient();
   const {data:{user}} = await supabase.auth.getUser();
