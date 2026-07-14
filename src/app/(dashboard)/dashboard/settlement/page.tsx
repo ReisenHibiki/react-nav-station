@@ -1,65 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import SettlementEmpty from "./SettlementEmpty";
 import SettlementDetail from "./SettlementDetail";
 import Loading from "@/components/Loading";
-import { Settlement } from "@/types/settlement";
-
-type SettlementResponse = {
-  settlement: Settlement | null;
-  role?: "owner" | "member";
-};
+import { useSettlement } from "@/hooks/useSettlement";
 
 
 export default function SettlementPage(){
 
-  const [data,setData] = useState<SettlementResponse | null>(null);
-
-  const [loading,setLoading] = useState(true);
-
-
-  useEffect(()=>{
-
-    async function fetchSettlement(){
-
-      try{
-
-        const res = await fetch("/api/settlement");
-
-
-        if(!res.ok){
-          throw new Error("Failed to fetch settlement");
-        }
-
-
-        const result =
-          await res.json();
-
-
-        setData(result);
-        console.log(result)
-
-
-      }catch(error){
-
-        console.error(error);
-
-      }finally{
-
-        setLoading(false);
-
-      }
-
-    }
-
-
-    fetchSettlement();
-
-
-  },[]);
-
-
+  const {
+    data,
+    loading
+  } = useSettlement();
+  
 
   if(loading){
     return (
@@ -70,8 +23,6 @@ export default function SettlementPage(){
 
   }
 
-
-
   if(!data?.settlement){
 
     return (
@@ -79,7 +30,6 @@ export default function SettlementPage(){
     );
 
   }
-
 
   return (
     <SettlementDetail

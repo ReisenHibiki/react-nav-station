@@ -3,6 +3,7 @@
 import { Settlement } from "@/types/settlement";
 import Avatar from "@/components/Avatar";
 import StatusIcon from "@/components/StatusIcon";
+import Link from "next/link";
 
 
 type Props = {
@@ -59,14 +60,14 @@ export default function SettlementDetail({ settlement, role }: Props) {
           {
             role === "owner" && (
               <>
-                <button className="
+                <Link href={'/dashboard/settlement/edit'} className="
                   px-5 py-2.5 rounded-xl
                   bg-blue-500 text-white
                   hover:bg-blue-600
                   transition
                 ">
                   修改聚落
-                </button>
+                </Link>
 
 
                 <button className="

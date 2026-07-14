@@ -50,10 +50,7 @@ export default function SettlementForm({
       setLoading(true);
       setError("");
 
-      const res = await fetch(
-        mode === "create"
-          ? "/api/settlement"
-          : `/api/settlement/${settlementId}`,
+      const res = await fetch("/api/settlement",
         {
           method: mode === "create" ? "POST" : "PATCH",
           headers: {

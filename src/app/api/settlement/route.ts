@@ -257,3 +257,180 @@ export async function POST(req: NextRequest) {
 
   }
 }
+
+
+// 编辑聚落 PATCH
+export async function PATCH(req: NextRequest) {
+
+  try {
+    const supabase = await createClient();
+    const {
+      data:{
+        user
+      }
+    } = await supabase.auth.getUser();
+
+    if(!user){
+
+      return NextResponse.json(
+        {
+          message:"请先登录"
+        },
+        {
+          status:401
+        }
+      );
+
+    }
+
+    const body = await req.json();
+    const {
+      name,
+      description,
+      rules,
+      status
+    } = body;
+
+
+    if(!name){
+      return NextResponse.json(
+        {
+          message:"聚落名称不能为空"
+        },
+        {
+          status:400
+        }
+      );
+
+    }
+    // 查询当前用户聚落身份
+    const [membership] = await db
+      .select({
+        settlementId:settlementMembers.settlementId,
+        role:settlementMembers.role
+      })
+      .from(settlementMembers)
+      .where(
+        eq(
+          settlementMembers.userId,
+          user.id
+        )
+      )
+      .limit(1);
+
+    if(!membership){
+
+      return NextResponse.json(
+        {
+          message:"不存在聚落"
+        },
+        {
+          status:404
+        }
+      );
+
+    }
+
+    // 权限检查
+    if(membership.role !== "owner"){
+
+      return NextResponse.json(
+        {
+          message:"没有权限修改聚落"
+        },
+        {
+          status:403
+        }
+      );
+
+    }
+
+    // 查询对应card
+    const [settlement] = await db
+      .select({
+        cardId:settlements.cardId
+      })
+      .from(settlements)
+      .where(
+        eq(
+          settlements.id,
+          membership.settlementId
+        )
+      )
+      .limit(1);
+
+    if(!settlement){
+
+      return NextResponse.json(
+        {
+          message:"聚落不存在"
+        },
+        {
+          status:404
+        }
+      );
+
+    }
+
+    // 更新两个表必须保持一致
+    await db.transaction(
+      async(tx)=>{
+
+        // 更新card基础信息
+        await tx
+          .update(cards)
+          .set({
+            name,
+            description:description ?? null
+          })
+          .where(
+            eq(
+              cards.id,
+              settlement.cardId
+            )
+          );
+
+        // 更新settlement扩展信息
+        await tx
+          .update(settlements)
+          .set({
+
+            rules:rules ?? null,
+
+            status,
+
+            updatedAt:new Date()
+
+          })
+          .where(
+            eq(
+              settlements.id,
+              membership.settlementId
+            )
+          );
+
+
+      }
+    );
+
+    return NextResponse.json(
+      {
+        message:"修改成功"
+      }
+    );
+
+  }catch(error){
+    console.error(
+      "update settlement error:",
+      error
+    );
+    return NextResponse.json(
+      {
+        message:"服务器错误"
+      },
+      {
+        status:500
+      }
+    );
+  }
+}
