@@ -1,11 +1,99 @@
-import React from 'react'
+"use client";
 
-type Props = {}
+import { useEffect, useState } from "react";
+import SettlementEmpty from "./SettlementEmpty";
+import SettlementDetail from "./SettlementDetail";
 
-const page = (props: Props) => {
+
+type Settlement = {
+  id:number;
+  cardId:number;
+  createdBy:string;
+  banner:string | null;
+  rules:string | null;
+  status:string;
+};
+
+
+type SettlementResponse = {
+  settlement: Settlement | null;
+  role?: "owner" | "member";
+};
+
+
+export default function SettlementPage(){
+
+  const [data,setData] = useState<SettlementResponse | null>(null);
+
+  const [loading,setLoading] = useState(true);
+
+
+  useEffect(()=>{
+
+    async function fetchSettlement(){
+
+      try{
+
+        const res = await fetch("/api/settlement");
+
+
+        if(!res.ok){
+          throw new Error("Failed to fetch settlement");
+        }
+
+
+        const result =
+          await res.json();
+
+
+        setData(result);
+
+
+      }catch(error){
+
+        console.error(error);
+
+      }finally{
+
+        setLoading(false);
+
+      }
+
+    }
+
+
+    fetchSettlement();
+
+
+  },[]);
+
+
+
+  if(loading){
+    return (
+      <div>
+        Loading...
+      </div>
+    );
+
+  }
+
+
+
+  if(!data?.settlement){
+
+    return (
+      <SettlementEmpty/>
+    );
+
+  }
+
+
   return (
-    <div>page</div>
-  )
-}
+    <SettlementDetail
+      settlement={data.settlement}
+      role={data.role!}
+    />
+  );
 
-export default page
+}
