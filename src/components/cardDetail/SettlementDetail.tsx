@@ -12,7 +12,7 @@ export default function SettlementDetail({ card }: Props) {
       <div className="w-full max-w-3xl px-6">
 
         <CardHeader card={card}>
-          <StatusIcon card={card}/>
+          <StatusIcon statusData={card.settlement.status}/>
         </CardHeader>
 
 

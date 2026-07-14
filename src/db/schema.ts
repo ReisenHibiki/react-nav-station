@@ -132,6 +132,7 @@ export const settlementMembers = pgTable("settlement_members", {
 
   userId: uuid("user_id")
   .notNull()
+  .unique()
   .references(()=>profiles.id),
 
 
