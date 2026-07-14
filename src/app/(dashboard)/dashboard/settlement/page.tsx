@@ -3,17 +3,8 @@
 import { useEffect, useState } from "react";
 import SettlementEmpty from "./SettlementEmpty";
 import SettlementDetail from "./SettlementDetail";
-
-
-type Settlement = {
-  id:number;
-  cardId:number;
-  createdBy:string;
-  banner:string | null;
-  rules:string | null;
-  status:string;
-};
-
+import Loading from "@/components/Loading";
+import { Settlement } from "@/types/settlement";
 
 type SettlementResponse = {
   settlement: Settlement | null;
@@ -47,6 +38,7 @@ export default function SettlementPage(){
 
 
         setData(result);
+        console.log(result)
 
 
       }catch(error){
@@ -72,7 +64,7 @@ export default function SettlementPage(){
   if(loading){
     return (
       <div>
-        Loading...
+        <Loading size="lg" text="加载中..."/>
       </div>
     );
 

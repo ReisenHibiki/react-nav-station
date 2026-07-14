@@ -23,9 +23,7 @@ export type BaseCard = {
 // 聚落扩展信息
 export type SettlementInfo = {
   id: number;
-
   cardId: number;
-  userId: string;
 
   banner: string | null;
   rules: string | null;

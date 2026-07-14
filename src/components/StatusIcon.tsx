@@ -1,11 +1,10 @@
 import React from 'react'
 import {
-  SettlementCard as SettlementCardType,
   SETTLEMENT_STATUS,
 } from "@/types/card";
 
 type Props = {
-  card: SettlementCardType;
+  statusData: (typeof SETTLEMENT_STATUS)[keyof typeof SETTLEMENT_STATUS];
 };
 const statusConfig = {
   [SETTLEMENT_STATUS.RECRUITING]: {
@@ -17,14 +16,14 @@ const statusConfig = {
     badge: "bg-blue-100 text-blue-700",
   },
   [SETTLEMENT_STATUS.AFK]: {
-    text: "⚪ 暂停招募",
+    text: "⚪ 暂停活动",
     badge: "bg-gray-100 text-gray-600",
   },
 } as const;
 
-const StatusIcon = ({ card }: Props) => {
+const StatusIcon = ({ statusData }: Props) => {
   const status =
-      statusConfig[card.settlement.status] ?? statusConfig[SETTLEMENT_STATUS.ACTIVE];
+      statusConfig[statusData] ?? statusConfig[SETTLEMENT_STATUS.ACTIVE];
       
   return (
         <div

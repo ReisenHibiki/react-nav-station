@@ -22,7 +22,7 @@ const statusConfig = {
     accent: "bg-blue-500",
   },
   [SETTLEMENT_STATUS.AFK]: {
-    text: "⚪ 暂停招募",
+    text: "⚪ 暂停活动",
     badge: "bg-gray-100 text-gray-600",
     border: "border-gray-200",
     accent: "bg-gray-400",

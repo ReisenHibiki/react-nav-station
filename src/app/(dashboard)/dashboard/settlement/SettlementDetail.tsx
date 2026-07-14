@@ -1,85 +1,195 @@
-type Settlement = {
+"use client";
 
-  id:number;
+import { Settlement } from "@/types/settlement";
+import Avatar from "@/components/Avatar";
+import StatusIcon from "@/components/StatusIcon";
 
-  cardId:number;
 
-  createdBy:string;
-
-  banner:string|null;
-
-  rules:string|null;
-
-  status:string;
-
+type Props = {
+  settlement: Settlement;
+  role: "owner" | "member";
 };
 
 
-type Props={
-
-  settlement:Settlement;
-
-  role:"owner"|"member";
-
-};
-
-
-
-export default function SettlementDetail({
-
-  settlement,
-
-  role
-
-}:Props){
-
-
+export default function SettlementDetail({ settlement, role }: Props) {
 
   return (
+    <div className="w-full max-w-3xl mx-auto p-6 space-y-6">
 
-    <div>
+      {/* 聚落头部 */}
+      <section className="bg-white rounded-2xl shadow-sm p-8">
 
+        <div className="flex flex-col items-center text-center">
 
-      <h1>
-        聚落 ID:
-        {settlement.id}
-      </h1>
+          {
+            settlement.card.icon ? (
+              <img
+                src={settlement.card.icon}
+                alt="settlement icon"
+                className="w-24 h-24 rounded-full object-cover shadow"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400">
+                无头像
+              </div>
+            )
+          }
 
+          <h1 className="mt-5 text-3xl font-bold text-gray-900">
+            {settlement.card.name}
+          </h1>
 
-      <p>
-        状态:
-        {settlement.status}
-      </p>
+          <p className="mt-3 text-gray-500 max-w-md">
+            {settlement.card.description || "暂无简介"}
+          </p>
 
-
-
-      {
-        role==="owner" &&
-
-        <div>
-
-          <button>
-            修改聚落
-          </button>
-
-
-          <button>
-            管理成员
-          </button>
-
+          <div className="mt-4">
+            <StatusIcon
+              statusData={
+                settlement.status as "recruiting" | "active" | "afk"
+              }
+            />
+          </div>
 
         </div>
-      }
+
+        {/* 操作按钮 */}
+        <div className="mt-8 flex justify-center gap-4">
+
+          {
+            role === "owner" && (
+              <>
+                <button className="
+                  px-5 py-2.5 rounded-xl
+                  bg-blue-500 text-white
+                  hover:bg-blue-600
+                  transition
+                ">
+                  修改聚落
+                </button>
 
 
+                <button className="
+                  px-5 py-2.5 rounded-xl
+                  bg-gray-100
+                  hover:bg-gray-200
+                  transition
+                ">
+                  管理成员
+                </button>
+              </>
+            )
+          }
+          <button className="
+            px-5 py-2.5 rounded-xl
+            bg-red-50 text-red-500
+            hover:bg-red-100
+            transition
+          ">
+            退出聚落
+          </button>
 
-      <button>
-        退出聚落
-      </button>
+        </div>
+
+      </section>
+
+      {/* 聚落信息 */}
+      <section className="bg-white rounded-2xl shadow-sm p-6">
+
+        <h2 className="text-xl font-semibold mb-5">
+          聚落信息
+        </h2>
 
 
+        <div className="space-y-3 text-gray-600">
+
+          <p>
+            聚落 ID：
+            <span className="text-gray-900">
+              {settlement.id}
+            </span>
+          </p>
+
+          <p>
+            创建者：
+            <span className="text-gray-900">
+              {settlement.createdBy}
+            </span>
+          </p>
+
+          <p>
+            当前成员：
+            <span className="text-gray-900">
+              {settlement.members.length} 人
+            </span>
+          </p>
+
+          {
+            settlement.rules && (
+              <div>
+                <p className="text-gray-900 font-medium mb-1">
+                  聚落规则
+                </p>
+
+                <p className="bg-gray-50 rounded-xl p-3 text-sm">
+                  {settlement.rules}
+                </p>
+              </div>
+            )
+          }
+
+        </div>
+
+      </section>
+      {/* 成员列表 */}
+      <section className="bg-white rounded-2xl shadow-sm p-6">
+
+        <h2 className="text-xl font-semibold mb-5">
+          成员列表
+        </h2>
+
+        <div className="space-y-3">
+
+          {
+            settlement.members.map(member => (
+
+              <div
+                key={member.id}
+                className="
+                  flex items-center justify-between
+                  bg-gray-50 rounded-xl
+                  px-4 py-3
+                "
+              >
+                <div className="flex items-center gap-3">
+
+                  <Avatar
+                    avatar={member.avatar}
+                    username={member.username}
+                  />
+
+                  <span className="font-medium">
+                    {member.username}
+                  </span>
+
+                </div>
+
+                <span className="
+                  px-3 py-1
+                  rounded-full
+                  bg-white
+                  text-sm
+                  text-gray-500
+                ">
+                  {member.role}
+                </span>
+
+              </div>
+
+            ))
+          }
+        </div>
+      </section>
     </div>
-
   );
-
 }
