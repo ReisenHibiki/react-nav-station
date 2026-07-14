@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
 import {
   cards,
   settlements,
   settlementMembers,
-  profiles
+  profiles,
+  settlementRequests
 } from "@/db/schema";
 
 // 查询用户所在聚落 GET
@@ -144,7 +145,9 @@ export async function POST(req: NextRequest) {
     }
     // 检查是否已经建立/加入聚落
     const [membership] = await db
-      .select()
+      .select({
+        id:settlementMembers.id
+        })
       .from(settlementMembers)
       .where(
         eq(
@@ -163,6 +166,36 @@ export async function POST(req: NextRequest) {
         }
       );
     }
+    
+      // 检查是否有pending加入申请
+    const [pendingRequest] = await db
+    .select({
+        id:settlementRequests.id
+      })
+    .from(settlementRequests)
+    .where(
+      and(
+        eq(
+          settlementRequests.userId,
+          user.id
+        ),
+        eq(
+          settlementRequests.status,
+          "pending"
+        )
+      )
+    )
+    .limit(1);
+  if(pendingRequest){
+    return NextResponse.json(
+      {
+        message:"已有正在审核中的加入申请，不能创建聚落"
+      },
+      {
+        status:400
+      }
+    );
+  }
 
     // 获取用户profile
     const [profile] = await db
