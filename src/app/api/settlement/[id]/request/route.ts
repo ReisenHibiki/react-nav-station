@@ -18,7 +18,7 @@ type Props = {
 // 申请加入聚落    POST
 export async function POST(
   req:NextRequest,
-  {params}:Props
+  { params }: { params: Promise<{ id: string }> }
 ){
   try{
     const supabase = await createClient();
@@ -41,8 +41,8 @@ export async function POST(
     }
 
 
-    const settlementId =
-      Number(params.id);
+  const { id } = await params;
+  const settlementId = Number(id);
 
     if(!settlementId){
       return NextResponse.json(
