@@ -17,15 +17,17 @@ export type Settlement = {
     link:string|null;
   };
 
-  members:{
+  members:Member[];
+};
+
+export type  Member = {
     id:number;
     userId:string;
     role:"owner"|"member";
     joinedAt:string;
     username: string;
     avatar: string
-  }[];
-};
+  }
 
 // 为前端创建/编辑表单的type
 export type SettlementStatus =

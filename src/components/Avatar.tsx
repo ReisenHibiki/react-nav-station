@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-  avatar?: string;
+  avatar: string | null;
   username: string;
   className?: string;
 };

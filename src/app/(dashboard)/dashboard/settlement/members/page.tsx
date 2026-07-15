@@ -1,14 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Member } from '@/types/settlement'
+import { MemberList } from "@/components/settlement/MemberList";
 
-type Member = {
-  id: number;
-  role: "owner" | "member";
-  username: string;
-  avatar: string | null;
-  joinedAt: string | null;
-};
 
 type JoinRequest = {
   id: number;
@@ -55,17 +50,20 @@ export default function MembersPage() {
       return;
     }
 
-    const res = await fetch(`/api/settlement/members/${id}`, {
-      method: "DELETE"
-    });
-
-    if (res.ok) {
-      loadData();
-    }
+    setLoading(true)
+      const res = await fetch(`/api/settlement/members/${id}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        loadData();
+      } else {
+        setLoading(false)        
+      }
   }
 
   // 审核申请
   async function handleRequest(id: number, action: "approve" | "reject") {
+    setLoading(true)
     const res = await fetch(`/api/settlement/members/requests/${id}`, {
       method: "PATCH",
       headers: {
@@ -76,6 +74,8 @@ export default function MembersPage() {
 
     if (res.ok) {
       loadData();
+    } else {
+      setLoading(false)
     }
   }
 
@@ -93,43 +93,30 @@ export default function MembersPage() {
         <h1 className="text-3xl font-bold text-slate-800">成员管理</h1>
 
         {/* 当前成员 */}
-        <section className="bg-white rounded-2xl shadow-sm border p-6">
-          <h2 className="text-xl font-semibold mb-5">当前成员</h2>
+        <MemberList members={members} action={(member)=>{
 
-          <div className="space-y-4">
-            {members.map((member) => (
-              <div
-                key={member.id}
-                className="flex items-center justify-between p-4 rounded-xl bg-slate-50"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center">
-                    {member.username[0]}
-                  </div>
+          if(member.role === "owner"){
+            return null;
+          }
 
-                  <div>
-                    <p className="font-medium">{member.username}</p>
-                    <p className="text-sm text-gray-400">
-                      {member.role === "owner" ? "聚落拥有者" : "成员"}
-                    </p>
-                  </div>
-                </div>
-
-                {member.role === "member" && (
-                  <button
-                    onClick={() => removeMember(member.id)}
-                    className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
-                  >
-                    踢出
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+          return  <button
+              onClick={()=>removeMember(member.id)}
+              className="
+              px-4 py-2
+              bg-red-500
+              text-white
+              rounded-lg
+              hover:bg-red-700
+              cursor-pointer
+              "
+            >
+              踢出
+            </button>
+        }
+      } />
 
         {/* 加入申请 */}
-        <section className="bg-white rounded-2xl border shadow-sm p-6">
+        <section className="bg-white rounded-2xl shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-5">加入申请</h2>
 
           {requests.length === 0 ? (
@@ -151,14 +138,16 @@ export default function MembersPage() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => handleRequest(request.id, "approve")}
-                      className="px-4 py-2 rounded-lg bg-green-500 text-white"
+                      className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600
+                       text-white cursor-pointer"
                     >
                       同意
                     </button>
 
                     <button
                       onClick={() => handleRequest(request.id, "reject")}
-                      className="px-4 py-2 rounded-lg bg-slate-800 text-white"
+                      className="px-4 py-2 rounded-lg bg-slate-600 hover:bg-slate-900
+                       text-white cursor-pointer"
                     >
                       拒绝
                     </button>
