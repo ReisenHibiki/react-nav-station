@@ -7,7 +7,7 @@ import {
   cards
 } from "@/db/schema";
 
-
+// offset pagination版搜索聚落Settlement信息
 export async function GET(
   request: Request
 ){
@@ -86,8 +86,6 @@ export async function GET(
         .limit(pageSize)
         .offset(offset);
 
-
-
     /*
       查询总数量
     */
@@ -113,32 +111,23 @@ export async function GET(
           )
         );
 
-
     const total =
       Number(totalResult.count);
-
 
     const totalPages =
       Math.ceil(
         total / pageSize
       );
 
-
-
     return NextResponse.json({
-
       settlements:result,
-
       pagination:{
         page,
         pageSize,
         total,
         totalPages
       }
-
     });
-
-
 
   }catch(error){
     
@@ -154,7 +143,5 @@ export async function GET(
         status:500
       }
     );
-
   }
-
 }

@@ -10,7 +10,7 @@ import {
   settlementRequests
 } from "@/db/schema";
 
-// 查询用户所在聚落 GET
+// 查询用户所在聚落的settlement,card,members GET
 export async function GET(){
   const supabase = await createClient();
   const {data:{user}} = await supabase.auth.getUser();
