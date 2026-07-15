@@ -4,6 +4,7 @@ import { Settlement } from "@/types/settlement";
 import Avatar from "@/components/Avatar";
 import StatusIcon from "@/components/StatusIcon";
 import Link from "next/link";
+import { MemberList } from "@/components/settlement/MemberList";
 
 
 type Props = {
@@ -172,54 +173,7 @@ export default function SettlementDetail({ settlement, role }: Props) {
 
       </section>
       {/* 成员列表 */}
-      <section className="bg-white rounded-2xl shadow-sm p-6">
-
-        <h2 className="text-xl font-semibold mb-5">
-          成员列表
-        </h2>
-
-        <div className="space-y-3">
-
-          {
-            settlement.members.map(member => (
-
-              <div
-                key={member.id}
-                className="
-                  flex items-center justify-between
-                  bg-gray-50 rounded-xl
-                  px-4 py-3
-                "
-              >
-                <div className="flex items-center gap-3">
-
-                  <Avatar
-                    avatar={member.avatar}
-                    username={member.username}
-                  />
-
-                  <span className="font-medium">
-                    {member.username}
-                  </span>
-
-                </div>
-
-                <span className="
-                  px-3 py-1
-                  rounded-full
-                  bg-white
-                  text-sm
-                  text-gray-500
-                ">
-                  {member.role}
-                </span>
-
-              </div>
-
-            ))
-          }
-        </div>
-      </section>
+      <MemberList members={settlement.members}/>
     </div>
   );
 }
