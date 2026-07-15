@@ -98,14 +98,14 @@ export default function SettlementDetail({ settlement, role }: Props) {
                 </Link>
 
 
-                <button className="
+                <Link href={'/dashboard/settlement/members'} className="
                   px-5 py-2.5 rounded-xl
                   bg-gray-100
                   hover:bg-gray-200
                   transition
                 ">
                   管理成员
-                </button>
+                </Link>
               </>
             )
           }
