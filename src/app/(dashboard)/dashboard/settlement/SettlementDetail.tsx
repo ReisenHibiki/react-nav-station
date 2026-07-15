@@ -14,6 +14,34 @@ type Props = {
 
 export default function SettlementDetail({ settlement, role }: Props) {
 
+  async function handleLeave(){
+    const confirmed =
+      window.confirm(
+        "确定退出聚落吗？"
+      );
+    if(!confirmed){
+      return;
+    }
+
+    const res = await fetch(
+      "/api/settlement",
+      {
+        method:"DELETE"
+      }
+    );
+
+    const data = await res.json();
+    if(!res.ok){
+      alert(
+        data.message
+      );
+      return;
+    }
+    window.location.reload();
+  }
+
+
+
   return (
     <div className="w-full max-w-3xl mx-auto p-6 space-y-6">
 
@@ -70,18 +98,19 @@ export default function SettlementDetail({ settlement, role }: Props) {
                 </Link>
 
 
-                <button className="
+                <Link href={'/dashboard/settlement/members'} className="
                   px-5 py-2.5 rounded-xl
                   bg-gray-100
                   hover:bg-gray-200
                   transition
                 ">
                   管理成员
-                </button>
+                </Link>
               </>
             )
           }
-          <button className="
+          <button onClick={handleLeave}
+          className="
             px-5 py-2.5 rounded-xl
             bg-red-50 text-red-500
             hover:bg-red-100

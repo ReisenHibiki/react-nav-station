@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
 import {
   cards,
   settlements,
   settlementMembers,
-  profiles
+  profiles,
+  settlementRequests
 } from "@/db/schema";
 
-// 查询聚落 GET
+// 查询用户所在聚落的settlement,card,members GET
 export async function GET(){
   const supabase = await createClient();
   const {data:{user}} = await supabase.auth.getUser();
@@ -144,7 +145,9 @@ export async function POST(req: NextRequest) {
     }
     // 检查是否已经建立/加入聚落
     const [membership] = await db
-      .select()
+      .select({
+        id:settlementMembers.id
+        })
       .from(settlementMembers)
       .where(
         eq(
@@ -163,6 +166,36 @@ export async function POST(req: NextRequest) {
         }
       );
     }
+    
+      // 检查是否有pending加入申请
+    const [pendingRequest] = await db
+    .select({
+        id:settlementRequests.id
+      })
+    .from(settlementRequests)
+    .where(
+      and(
+        eq(
+          settlementRequests.userId,
+          user.id
+        ),
+        eq(
+          settlementRequests.status,
+          "pending"
+        )
+      )
+    )
+    .limit(1);
+  if(pendingRequest){
+    return NextResponse.json(
+      {
+        message:"已有正在审核中的加入申请，不能创建聚落"
+      },
+      {
+        status:400
+      }
+    );
+  }
 
     // 获取用户profile
     const [profile] = await db
@@ -433,4 +466,164 @@ export async function PATCH(req: NextRequest) {
       }
     );
   }
+}
+
+
+// DELETE 删除接口
+export async function DELETE(){
+
+  try{
+
+    const supabase = await createClient();
+
+    const {
+      data:{
+        user
+      }
+    } = await supabase.auth.getUser();
+
+
+    if(!user){
+
+      return NextResponse.json(
+        {
+          message:"请先登录"
+        },
+        {
+          status:401
+        }
+      );
+
+    }
+
+    // 查询当前用户成员关系
+    const [membership] = await db
+      .select()
+      .from(settlementMembers)
+      .where(
+        eq(
+          settlementMembers.userId,
+          user.id
+        )
+      )
+      .limit(1);
+
+
+    if(!membership){
+      return NextResponse.json(
+        {
+          message:"你没有加入聚落"
+        },
+        {
+          status:404
+        }
+      );
+    }
+
+    await db.transaction(
+      async(tx)=>{
+        // 查询当前聚落全部成员
+        const members = await tx
+          .select()
+          .from(settlementMembers)
+          .where(
+            eq(
+              settlementMembers.settlementId,
+              membership.settlementId
+            )
+          );
+
+        // 情况1:
+        // 只有自己一个人
+        // 删除card即可 cascade
+        if(members.length === 1){
+          const [settlement] = await tx
+            .select({
+              cardId:settlements.cardId
+            })
+            .from(settlements)
+            .where(
+              eq(
+                settlements.id,
+                membership.settlementId
+              )
+            )
+            .limit(1);
+          await tx
+            .delete(cards)
+            .where(
+              eq(
+                cards.id,
+                settlement.cardId
+              )
+            );
+          return;
+        }
+
+        // 情况2:
+        // 多人
+        if(membership.role === "owner"){
+
+          // 找加入时间最早的人
+          const nextOwner = members
+            .filter(
+              item =>
+                item.userId !== user.id
+            )
+            .sort(
+              (a,b)=>
+                a.joinedAt.getTime()
+                -
+                b.joinedAt.getTime()
+            )[0];
+
+          // 转移owner
+          await tx
+            .update(settlementMembers)
+            .set({
+              role:"owner"
+            })
+            .where(
+              eq(
+                settlementMembers.id,
+                nextOwner.id
+              )
+            );
+        }
+
+        // 删除自己
+        await tx
+          .delete(settlementMembers)
+          .where(
+            eq(
+              settlementMembers.userId,
+              user.id
+            )
+          );
+
+
+      }
+    );
+
+    return NextResponse.json({
+      message:"退出成功"
+    });
+
+  }catch(error){
+    console.error(
+      "leave settlement error:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        message:"服务器错误"
+      },
+      {
+        status:500
+      }
+    );
+
+  }
+
 }

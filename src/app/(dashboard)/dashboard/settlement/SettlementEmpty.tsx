@@ -28,7 +28,7 @@ export default function SettlementEmpty(){
 
 
       <Link
-        href="/dashboard/settlement/search"
+        href="/dashboard/settlement/join"
         className="
         w-64 h-40
         bg-white
