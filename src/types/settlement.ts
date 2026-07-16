@@ -26,7 +26,7 @@ export type  Member = {
     role:"owner"|"member";
     joinedAt:string;
     username: string;
-    avatar: string
+    avatar: string | null
   }
 
 // 为前端创建/编辑表单的type

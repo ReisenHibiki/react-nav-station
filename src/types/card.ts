@@ -1,3 +1,5 @@
+import { Member } from "@/types/settlement";
+
 export const CARD_TYPE = {
   RESOURCE: "resource",
   SETTLEMENT: "settlement",
@@ -27,6 +29,7 @@ export type SettlementInfo = {
 
   banner: string | null;
   rules: string | null;
+  members: Member[]
 
   createdAt: Date;
   updatedAt: Date;
