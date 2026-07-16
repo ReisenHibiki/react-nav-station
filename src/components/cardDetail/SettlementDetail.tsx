@@ -2,6 +2,7 @@ import CardHeader from "./CardHeader";
 import { SettlementCard } from "@/types/card";
 import StatusIcon from "@/components/StatusIcon"
 import { MemberList } from "../settlement/MemberList";
+import Advertisement from "@/components/Advertisement"
 
 type Props = {
   card: SettlementCard;
@@ -20,9 +21,7 @@ export default function SettlementDetail({ card }: Props) {
           <MemberList members={card.settlement.members} />          
         </div>
 
-        <div className="mt-8 h-40 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 bg-white">
-          广告位
-        </div>
+        <Advertisement/>
 
       </div>
     </div>

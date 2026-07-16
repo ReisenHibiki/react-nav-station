@@ -84,7 +84,7 @@ export default function Navbar() {
                   flex items-center gap-3 px-3 py-2 rounded-lg
                   cursor-pointer transition-all duration-200
                   hover:bg-slate-100 hover:translate-x-1
-                  relative
+                  relative select-none
                   ${isActive ? "bg-slate-100 font-semibold" : ""}
                 `}
               >

@@ -1,5 +1,6 @@
 import CardHeader from "./CardHeader";
 import { ResourceCard } from "@/types/card";
+import Advertisement from "@/components/Advertisement"
 
 type Props = {
   card: ResourceCard;
@@ -23,9 +24,7 @@ export default function ResourceDetail({ card }: Props) {
             </div>          
         </CardHeader>
 
-        <div className="mt-8 h-40 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 bg-white">
-          广告位
-        </div>
+        <Advertisement/>
 
       </div>
     </div>

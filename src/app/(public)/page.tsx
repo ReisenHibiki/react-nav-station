@@ -65,7 +65,7 @@ export default function Home() {
   }
 
   return (
-  <div className="min-h-screen w-full scroll-auto bg-white">
+  <div className="min-h-screen w-full scroll-auto bg-white select-none">
     {/* SearchBar 搜索栏*/}
       <div className="w-full h-72 flex flex-col items-center justify-center bg-linear-to-b from-slate-200 to-white">
 
@@ -108,7 +108,7 @@ export default function Home() {
     {isLoading ? <Loading size='lg' /> : 
     <div className="bg-white">
       {data.map((section: Section)=>(
-        <div className="w-full flex flex-col gap-4 p-6" 
+        <div className="w-full flex flex-col gap-4 p-6 select-none" 
         key={section.title}
         id={section.title}>
           <p className="font-bold text-2xl ml-4 mt-2">{section.title}</p>
