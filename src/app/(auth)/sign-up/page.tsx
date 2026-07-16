@@ -116,8 +116,9 @@ export default function SignUpPage() {
 
         if (res.ok) {
           router.replace("/sign-in");
-        }
-      }, 4000);
+          setLoading(false)
+        } else {setLoading(false)}
+      }, 1500);
 
     } catch (error) {
       console.error(error)
@@ -126,8 +127,7 @@ export default function SignUpPage() {
       setTimeout(() => {
         setMessage("");
       }, 3000);
-    } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -140,7 +140,7 @@ export default function SignUpPage() {
       items-center
       justify-center
       bg-gray-50
-      px-4
+      px-4 select-none
       "
     >
       {/* 后端Message气泡代码 */}

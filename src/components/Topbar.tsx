@@ -83,9 +83,9 @@ const Topnav = ({}: Props) => {
     <header className="w-full h-14 border-b border-gray-200 bg-white 
     flex items-center justify-between px-8 select-none">
       {/* Left */}
-      <div className="text-sm text-gray-500 font-light">
-        欢迎来到傻鱼导航站
-      </div>
+      <Link href={'/'} className="text-sm text-gray-500 font-light">
+        傻鱼导航
+      </Link>
 
       {/* Right右侧用户小菜单 */}
       {isLoading ? <Loading /> : 

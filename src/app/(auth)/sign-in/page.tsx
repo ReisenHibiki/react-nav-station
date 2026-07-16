@@ -89,7 +89,7 @@ export default function SignInPage() {
         setTimeout(() => {
           setMessage("");
         }, 4000);
-
+        setLoading(false)
         return;
       }
       // 登录成功
@@ -108,9 +108,9 @@ export default function SignInPage() {
       setTimeout(() => {
         setMessage("");
       }, 4000);
-    } finally {
-      setLoading(false);
+      setLoading(false)
     }
+
   };
 
   return (
@@ -121,7 +121,7 @@ export default function SignInPage() {
       items-center
       justify-center
       bg-gray-50
-      px-4
+      px-4 select-none
       "
     >
       {message && (
