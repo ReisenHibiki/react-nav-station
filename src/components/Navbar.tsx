@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from 'next/link';
 
 // icons
-import SetMealIcon from '@mui/icons-material/SetMeal';
+import BuildIcon from '@mui/icons-material/Build';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
@@ -22,6 +22,7 @@ const navItems: NavItem[] = [
   { label: "首页推荐", icon: "home", type: "scroll", target: "首页推荐" },
   { label: "教程百科", icon: "library", type: "scroll", target: "教程百科" },
   { label: "寻找聚落", icon: "village", type: "scroll", target: "寻找聚落" },
+  { label: "实用工具", icon: "buildtool", type: "scroll", target: "实用工具" },
   { label: "皮肤站", icon: "awesome", type: "scroll", target: "皮肤站" },
 ]
 
@@ -30,6 +31,7 @@ const iconMap: Record<string, React.ReactNode> = {
   library: <LibraryBooksIcon style={{ fontSize: 22 }} />,
   village: <HolidayVillageIcon style={{ fontSize: 22 }} />,
   awesome: <AutoAwesomeIcon style={{ fontSize: 22 }} />,
+  buildtool: <BuildIcon style={{ fontSize: 22 }} />,
 }
 
 export default function Navbar() {
