@@ -9,12 +9,6 @@ import {
 } from "@/db/schema";
 
 
-type Props = {
-  params:{
-    id:string;
-  };
-};
-
 // 申请加入聚落    POST
 export async function POST(
   req:NextRequest,

@@ -42,7 +42,7 @@ export async function GET() {
         const card: SettlementCard = {
           ...row.cards,
           type: CARD_TYPE.SETTLEMENT,
-          settlement: row.settlements as SettlementInfo,
+          settlement: {...row.settlements, members:[]} as SettlementInfo,
         };
         section.cards.push(card);
       } else {

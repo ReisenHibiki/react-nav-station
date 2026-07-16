@@ -9,7 +9,7 @@ import { settlementMembers } from "@/db/schema";
 // owner踢出聚落成员  DELETE
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
