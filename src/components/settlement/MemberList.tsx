@@ -11,7 +11,7 @@ export const MemberList = ({members, action}: Props) => {
 
   return (
         
-        <section className="bg-white rounded-2xl shadow-sm p-6">
+        <section className="bg-white rounded-2xl shadow-sm p-6 select-none">
 
         <h2 className="text-xl font-semibold mb-5">
           成员列表

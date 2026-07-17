@@ -33,7 +33,7 @@ const StatusIcon = ({ statusData }: Props) => {
             px-3
             py-1
             text-[11px]
-            font-medium
+            font-medium select-none
             ${status.badge}
           `}
         >

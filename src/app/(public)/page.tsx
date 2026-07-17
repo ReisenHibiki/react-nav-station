@@ -32,7 +32,7 @@ export default function Home() {
         setSections(data)
         setData(data)
         // 打印检查数据
-        console.log(data)
+        // console.log(data)
 
       } catch {
         setData([{title:"获取数据失败",sortOrder:0, cards: []}])

@@ -12,12 +12,14 @@ export default function ResourceDetail({ card }: Props) {
       <div className="w-full max-w-3xl px-6">
 
         <CardHeader card={card} >
-            <div className="mt-5">
+            <div className="mt-5 select-none">
               <a
                 href={card.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-white font-medium hover:bg-blue-700 transition"
+                className="inline-flex items-center justify-center rounded-xl bg-blue-600 
+                px-6 py-3 text-white font-medium hover:bg-blue-700 
+                transition"
               >
                 立即访问
               </a>

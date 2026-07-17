@@ -18,7 +18,7 @@ export default function CardHeader({ card, children }: Props) {
             alt={card.name}
             width={64}
             height={64}
-            className="rounded-xl"
+            className="rounded-xl select-none"
           />
 
           <div className="flex-1">

@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/Avatar";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 type Props = {
 };
@@ -48,9 +49,19 @@ const Topnav = ({}: Props) => {
     }
     // 安装监听
     document.addEventListener("mousedown", handleClickOutside);
-    // 接口检查是否登录
+
+    // 检查是否登录
     const checkLogin = async()=>{
       try{
+        // 如果没有session登录状态就不请求
+        const supabase = createClient()
+        const { data: { session }} = await supabase.auth.getSession();
+        if (!session){
+          setIsLoading(false)
+          setIslogin(false)
+          return
+        }
+
         const res = await fetch('/api/profile')
         if(!res.ok){
           setIslogin(false)
