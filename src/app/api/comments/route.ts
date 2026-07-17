@@ -13,15 +13,20 @@ export async function GET(request: Request) {
     const targetType = searchParams.get("targetType");
     const targetId = searchParams.get("targetId");
     
-    // 限制最大 limit 为 100
-    const limit = Math.min(
-      Number(searchParams.get("limit") ?? 20),
-      100
-    );
+    // 限制最大 limit 为 100 并且校验合法参数
+    const rawLimit = Number(searchParams.get("limit") ?? 20);
+    const limit = Number.isInteger(rawLimit) && rawLimit > 0
+    ? Math.min(rawLimit, 100)
+    : 20;
 
-    // 游标参数
-    const cursorCreatedAt = searchParams.get("cursorCreatedAt");
-    const cursorId = searchParams.get("cursorId");
+    // 2. 游标参数校验和转换
+    const cursorIdNumber = searchParams.get("cursorId")
+      ? Number(searchParams.get("cursorId"))
+      : null;
+
+    const cursorDate = searchParams.get("cursorCreatedAt")
+      ? new Date(searchParams.get("cursorCreatedAt")!)
+      : null;
 
     // 参数验证
     if (!targetType || !targetId) {
@@ -37,16 +42,14 @@ export async function GET(request: Request) {
       eq(comments.targetId, targetId)
     ];
 
-    // 游标分页条件：查询比游标更旧的数据
-    if (cursorCreatedAt && cursorId) {
+    // 游标分页条件：只有游标参数都有效时才添加
+    if (cursorDate && cursorIdNumber !== null && !isNaN(cursorIdNumber)) {
       conditions.push(
         or(
-          // 情况1: 创建时间更早
-          lt(comments.createdAt, new Date(cursorCreatedAt)),
-          // 情况2: 创建时间相同，但ID更小
+          lt(comments.createdAt, cursorDate),
           and(
-            eq(comments.createdAt, new Date(cursorCreatedAt)),
-            lt(comments.id, Number(cursorId))
+            eq(comments.createdAt, cursorDate),
+            lt(comments.id, cursorIdNumber)
           )
         )!
       );
@@ -94,10 +97,8 @@ export async function GET(request: Request) {
     });
 
   } catch (error) {
-    // 错误处理
     console.error("Comments API Error:", error);
     
-    // 区分数据库错误和其他错误
     if (error instanceof Error) {
       return NextResponse.json(
         { 
