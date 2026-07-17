@@ -207,3 +207,32 @@ export const settlementRequests = pgTable(
       )
   })
 )
+
+
+// 评论表
+export const comments = pgTable("comments", {
+
+  id: bigint("id", {
+    mode:"number"
+  })
+  .primaryKey()
+  .generatedAlwaysAsIdentity(),
+
+  userId: uuid("user_id")
+    .notNull()
+    .references(()=>profiles.id),
+
+  targetType: text("target_type")
+    .notNull(),
+
+  targetId: text("target_id")
+    .notNull(),
+
+  content: text("content")
+    .notNull(),
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+});
