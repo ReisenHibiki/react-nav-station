@@ -55,7 +55,14 @@ const fetchComments = useCallback(
       setHasMore(data.hasMore);
 
       if (append) {
-        setComments((prev) => [...prev, ...data.comments]);
+        setComments(prev => {
+            const ids = new Set(prev.map(c => c.id));
+            // 简单去重防止因网络原因重复
+            return [
+                ...prev,
+                ...data.comments.filter(c => !ids.has(c.id))
+            ];
+        });
       } else {
         setComments(data.comments);
       }
@@ -78,7 +85,7 @@ useEffect(() => {
 }, [fetchComments]);
 
 const loadMore = () => {
-  if (!nextCursor || loadingMore) return;
+  if (!nextCursor || loadingMore || loading) return;
   fetchComments(nextCursor, true);
 };
 
@@ -91,7 +98,7 @@ const loadMore = () => {
       {/* 下一步这里放 CommentList */}
 
       {/* 下一步这里放 LoadMore */}
-      <button onClick={()=>{loadMore}}></button>
+      <button onClick={()=>{loadMore()}}></button>
 
       <pre className="text-xs">
 
