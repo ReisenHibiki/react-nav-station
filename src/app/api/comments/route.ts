@@ -4,12 +4,19 @@ import { eq, and, desc, count, lt, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+const allowedTargetTypes=[
+ "card",
+ "profile",
+ "settlement"
+];
 
 // 使用cursor pagination游标
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const supabase=await createClient();
+    const {data:{user}}=await supabase.auth.getUser();
 
+    const searchParams = request.nextUrl.searchParams
     const targetType = searchParams.get("targetType");
     const targetId = searchParams.get("targetId");
     
@@ -34,6 +41,12 @@ export async function GET(request: Request) {
         { message: "Missing required parameters: targetType and targetId" },
         { status: 400 }
       );
+    }
+    if (!allowedTargetTypes.includes(targetType)) {
+      return NextResponse.json(
+        { message: "Invalid targetType" },
+        { status: 400 }
+    );
     }
 
     // 基础查询条件
@@ -91,9 +104,9 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       comments: commentsData,
+      currentUserId:user?.id ?? null,
       nextCursor,
       hasMore,
-      limit
     });
 
   } catch (error) {
@@ -145,7 +158,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // 内容处理
+    // targetType验证
+    if(!allowedTargetTypes.includes(targetType)){
+        return NextResponse.json(
+        { message: "Invalid targetType" },
+        { status: 400 }
+      );
+    }
+
+    // 内容验证
     const text = String(content).trim();
     if (text.length === 0) {
       return NextResponse.json(
@@ -160,7 +181,7 @@ export async function POST(request: Request) {
       );
     }
 
-
+    // 插入评论
     const result = await db
       .insert(comments)
       .values({
@@ -171,8 +192,31 @@ export async function POST(request: Request) {
       })
       .returning();
 
+    // 查询最新插入减少前端查询,返回数据结构和GET一致
+    const comment = await db
+    .select({
+      id: comments.id,
+      content: comments.content,
+      createdAt: comments.createdAt,
+      user: {
+        id: profiles.id,
+        username: profiles.username,
+        avatar: profiles.avatar
+      }
+    })
+    .from(comments)
+    .leftJoin(
+      profiles,
+      eq(comments.userId, profiles.id)
+    )
+    .where(
+      eq(comments.id, result[0].id)
+    )
+    .limit(1);
+
+    // 返回数据
     return NextResponse.json(
-      { comment: result[0] },
+      { comment: comment[0] },
       { status: 201 }
     );
 
