@@ -44,8 +44,8 @@ export default function CommentInput({
 
       setContent("");
       
-      const comment = await response.json()
-      onSuccess(comment);
+      const data = await response.json()
+      onSuccess(data.comment);
 
     } catch (error) {
       console.error(error);
