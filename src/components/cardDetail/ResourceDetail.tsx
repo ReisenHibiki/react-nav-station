@@ -1,6 +1,7 @@
 import CardHeader from "./CardHeader";
 import { ResourceCard } from "@/types/card";
 import Advertisement from "@/components/Advertisement"
+import Comment from "@/components/comment/Comment";
 
 type Props = {
   card: ResourceCard;
@@ -27,6 +28,7 @@ export default function ResourceDetail({ card }: Props) {
         </CardHeader>
 
         <Advertisement/>
+        <Comment targetId={String(card.id)} targetType="settlement"/>
 
       </div>
     </div>
