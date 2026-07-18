@@ -82,27 +82,27 @@ export default function WalletPanel() {
   return (
     <div className="m-4 sm:m-6 md:m-8 select-none">
       {/* 卡片容器 */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-[1px] shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 p-px shadow-2xl">
         {/* 内部卡片 - 毛玻璃效果 */}
         <div className="relative rounded-3xl bg-white/10 backdrop-blur-xl p-6 sm:p-8">
           {/* 装饰光晕 */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-purple-500/30 to-blue-500/30 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-pink-500/20 to-orange-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-400/10 to-blue-400/10 rounded-full blur-2xl"></div>
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-linear-to-br from-purple-500/30 to-blue-500/30 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-linear-to-tr from-pink-500/20 to-orange-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-linear-to-r from-purple-400/10 to-blue-400/10 rounded-full blur-2xl"></div>
 
           {/* 内容 */}
           <div className="relative z-10">
             {/* Header */}
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v1m0 1v1m0 1v1m0 1v1m0 1v1" />
                   </svg>
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-white">
-                    我的钱包
+                    钱包
                   </h1>
                   <p className="text-xs text-white/50 font-medium tracking-widest">
                     WALLET
@@ -116,7 +116,7 @@ export default function WalletPanel() {
                 className={`
                   relative px-5 py-2.5 rounded-2xl font-medium text-sm transition-all duration-300
                   ${canCheckIn() && !checking
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 active:scale-95'
+                    ? 'bg-linear-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 active:scale-95'
                     : 'bg-white/10 text-white/30 cursor-not-allowed backdrop-blur-sm'
                   }
                 `}
@@ -163,7 +163,7 @@ export default function WalletPanel() {
             {/* 余额 */}
             <div className="mt-8 p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
               <p className="text-sm font-medium text-white/50 tracking-wider">
-                余额
+                Balance - 鱼鱼币
               </p>
               <div className="flex items-end gap-3 mt-2">
                 <span className="text-5xl font-bold text-white">
