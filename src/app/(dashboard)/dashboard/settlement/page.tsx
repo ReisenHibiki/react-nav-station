@@ -2,7 +2,7 @@
 
 import SettlementEmpty from "./SettlementEmpty";
 import SettlementDetail from "./SettlementDetail";
-import Loading from "@/components/Loading";
+import Skeleton from "@/components/Skeleton";
 import { useSettlement } from "@/hooks/useSettlement";
 
 
@@ -17,7 +17,7 @@ export default function SettlementPage(){
   if(loading){
     return (
       <div>
-        <Loading size="lg" text="加载中..."/>
+        <Skeleton/>
       </div>
     );
 

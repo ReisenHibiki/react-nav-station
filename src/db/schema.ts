@@ -236,3 +236,91 @@ export const comments = pgTable("comments", {
     .notNull(),
 
 });
+
+
+// 钱包表
+export const wallets = pgTable("wallets", {
+  id: bigint("id", {
+    mode: "number",
+  })
+  .primaryKey()
+  .generatedAlwaysAsIdentity(),
+  // 对应 profiles.user_id
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => profiles.id),
+  /**
+   * 鱼鱼币余额
+   *
+   * 数据库存储最小单位
+   *
+   * 例如:
+   * 100 = 1.00 鱼鱼币
+   */
+  balance: integer("balance")
+    .notNull()
+    .default(0),
+  /**
+   * 历史累计获得
+   * 同样使用最小单位
+   */
+  totalEarned: integer("total_earned")
+    .notNull()
+    .default(0),
+  /**
+   * 最后签到时间
+   */
+  lastCheckIn: timestamp("last_check_in", {
+    withTimezone: true,
+  }),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+  })
+  .defaultNow()
+  .notNull(),
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+  })
+  .defaultNow()
+  .notNull(),
+});
+
+export const walletTransactions = pgTable(
+  "wallet_transactions",
+  {
+    id: bigint("id", {
+      mode:"number",
+    })
+    .primaryKey()
+    .generatedAlwaysAsIdentity(),
+
+    // 出账钱包
+    fromWalletId: bigint("from_wallet_id", {
+      mode:"number",
+    })
+    .references(()=>wallets.id),
+    // 入账钱包
+    toWalletId: bigint("to_wallet_id", {
+      mode:"number",
+    })
+    .notNull()
+    .references(()=>wallets.id),
+    // 最小单位
+    amount: integer("amount")
+    .notNull(),
+
+    type: varchar("type",{
+      length:30,
+    })
+    .notNull(),
+
+    description:text("description"),
+
+    createdAt:timestamp("created_at",{
+      withTimezone:true,
+    })
+    .defaultNow()
+    .notNull(),
+  }
+)

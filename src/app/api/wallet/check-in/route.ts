@@ -57,7 +57,8 @@ export async function POST() {
       const [updated] = await tx
         .update(wallets)
         .set({
-          balance: wallet.balance + CHECK_IN_REWARD,
+        // 由数据库计算，更严格
+          balance: sql`${wallets.balance} + ${CHECK_IN_REWARD}`,
           totalEarned: wallet.totalEarned + CHECK_IN_REWARD,
           lastCheckIn: new Date()
         })

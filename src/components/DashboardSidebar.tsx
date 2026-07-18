@@ -49,7 +49,7 @@ export default function DashboardSidebar() {
         w-64 h-screen fixed
         bg-white/80 backdrop-blur-xl
         border-r border-slate-200
-        shadow-sm
+        shadow-sm select-none
       "
     >
       <div className="p-5 flex flex-col gap-6">
