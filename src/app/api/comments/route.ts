@@ -116,6 +116,76 @@ export async function GET(request: Request) {
   }
 }
 
+// 发布评论API POST
+export async function POST(request: Request) {
+  try {
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // 获取body
+    const body = await request.json();
+    const { targetType, targetId, content } = body;
+
+    // 参数验证
+    if (!targetType || !targetId || !content) {
+      return NextResponse.json(
+        { message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // 内容处理
+    const text = String(content).trim();
+    if (text.length === 0) {
+      return NextResponse.json(
+        { message: "Content cannot be empty" },
+        { status: 400 }
+      );
+    }
+    if (text.length > 500) {
+      return NextResponse.json(
+        { message: "Content too long" },
+        { status: 400 }
+      );
+    }
+
+
+    const result = await db
+      .insert(comments)
+      .values({
+        userId: user.id,
+        targetType,
+        targetId,
+        content: text
+      })
+      .returning();
+
+    return NextResponse.json(
+      { comment: result[0] },
+      { status: 201 }
+    );
+
+  } catch (error) {
+    console.error("Create Comment Error:", error);
+
+    return NextResponse.json(
+      { message: "Failed to create comment" },
+      { status: 500 }
+    );
+  }
+}
+
 // 弃用！Abandoned！！offset游标分页法，想了下不适合评论组件
 // export async function GET(req:NextRequest){
 
