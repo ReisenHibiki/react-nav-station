@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
-import { profiles } from "@/db/schema";
+import { profiles, wallets } from "@/db/schema";
 
 export async function POST(req: Request) {
   try{
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     );
   }
 
+  // 之后使用数据库Trigger取代下面两个创建方式
   // 利用onConflictDoNothing检查profile如不存在则新建
   await db.insert(profiles)
     .values({
@@ -34,6 +35,15 @@ export async function POST(req: Request) {
       avatar: `http://api.rms.net.cn/head/${data.user.user_metadata.username}`
     })
     .onConflictDoNothing();
+
+  // 利用onConflictDoNothing添加钱包如不存在则新建
+  await db.insert(wallets)
+  .values({
+    userId: data.user.id,
+    balance: 0,
+    totalEarned: 0,
+  })
+  .onConflictDoNothing();
 
   return NextResponse.json({
     success: true,
