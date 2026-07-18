@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm"
 import { CARD_TYPE, Card } from "@/types/card"
 
 export default async function getCardDetail(card_id:number): Promise<Card | null>{
+    try{
     const res = await db
     .select()
     .from(cards)
@@ -60,4 +61,8 @@ export default async function getCardDetail(card_id:number): Promise<Card | null
     ...card,
     type: CARD_TYPE.RESOURCE,
     };
+
+    }catch(err){
+        return null
+    }
 }

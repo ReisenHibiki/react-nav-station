@@ -3,6 +3,7 @@ import { SettlementCard } from "@/types/card";
 import StatusIcon from "@/components/StatusIcon"
 import { MemberList } from "../settlement/MemberList";
 import Advertisement from "@/components/Advertisement"
+import Comment from "@/components/comment/Comment";
 
 type Props = {
   card: SettlementCard;
@@ -22,7 +23,7 @@ export default function SettlementDetail({ card }: Props) {
         </div>
 
         <Advertisement/>
-
+        <Comment targetId={String(card.id)} targetType="settlement"/>
       </div>
     </div>
   );
