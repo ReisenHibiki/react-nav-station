@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 // icons
 import PersonIcon from '@mui/icons-material/Person'
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
 type NavItem = {
   label: string
@@ -26,11 +27,17 @@ const navItems: NavItem[] = [
     href: "/dashboard/settlement",
     icon: "settlement",
   },
+  {
+    label: "鲨鱼钱包",
+    href: "/dashboard/wallet",
+    icon: "wallet",
+  },
 ]
 
 const iconMap: Record<string, React.ReactNode> = {
   profile: <PersonIcon style={{ fontSize: 22 }} />,
   settlement: <HolidayVillageIcon style={{ fontSize: 22 }} />,
+  wallet: <AccountBalanceWalletIcon style={{ fontSize: 22 }}/>,
 }
 
 export default function DashboardSidebar() {

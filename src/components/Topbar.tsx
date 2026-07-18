@@ -110,7 +110,10 @@ const Topnav = ({}: Props) => {
             />            
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-3 rounded-full px-2 py-1 hover:bg-gray-100 transition"
+            className="flex items-center gap-3 
+            rounded-full px-2 py-1 
+            hover:bg-gray-200 transition
+            active:scale-95"
           >
 
 
