@@ -6,6 +6,7 @@ import Link from "next/link";
 import Loading from "@/components/Loading";
 import {Card} from "@/types/card"
 import CardRenderer from "@/components/cards/CardRenderer";
+import Banner from "@/components/Banner";
 
 type Section = {
   title: string,
@@ -66,10 +67,25 @@ export default function Home() {
 
   return (
   <div className="min-h-screen w-full scroll-auto bg-white select-none">
-    {/* SearchBar 搜索栏*/}
-      <div className="w-full h-72 flex flex-col items-center justify-center bg-linear-to-b from-slate-200 to-white">
 
-      <span className="text-2xl font-light text-slate-700 mb-6">
+    <div className="relative w-full h-100 overflow-hidden">
+
+      <div className="absolute inset-0">
+        <div 
+          className="
+            absolute 
+            inset-0 
+            z-10 
+            bg-black/30
+          "
+        />
+        <Banner />
+      </div>
+
+    {/* SearchBar 搜索栏*/}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+
+      <span className="text-2xl font-light text-white mb-6">
         傻鱼导航站欢迎您
       </span>
 
@@ -102,6 +118,7 @@ export default function Home() {
           <SearchIcon />
         </button>
       </div>
+    </div>
     </div>
     
     {/* Sections 内容部分 */}
