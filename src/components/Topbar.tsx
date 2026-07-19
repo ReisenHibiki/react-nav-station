@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = {
+  onMenuClick?: () => void;
 };
 
-const Topnav = ({}: Props) => {
+const Topnav = ({onMenuClick}: Props) => {
   // useState
   const [open, setOpen] = useState(false);
   const [isLogin, setIslogin] = useState(false)
@@ -92,11 +93,29 @@ const Topnav = ({}: Props) => {
 
   return (
     <header className="w-full h-14 border-b border-gray-200 bg-white 
-    flex items-center justify-between px-8 select-none">
+    flex items-center justify-between px-4 select-none">
       {/* Left */}
-      <Link href={'/'} className="text-sm text-gray-500 font-light">
-        傻鱼导航
-      </Link>
+    <div className="flex items-center gap-3">
+        {/* 手机/小屏菜单按钮 */}
+        <button
+          onClick={onMenuClick}
+          className="
+            sm:hidden
+            p-2
+            rounded-lg
+            hover:bg-gray-100
+          "
+        >
+          ☰
+        </button>
+
+        <Link 
+          href={'/'}
+          className="ml-3 text-sm text-gray-500 font-light"
+        >
+          傻鱼导航
+        </Link>
+      </div>
 
       {/* Right右侧用户小菜单 */}
       {isLoading ? <Loading /> : 

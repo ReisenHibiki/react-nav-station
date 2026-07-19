@@ -75,7 +75,7 @@ export default function Home() {
           className="
             absolute 
             inset-0 
-            z-10 
+            z-8 
             bg-black/30
           "
         />
@@ -83,7 +83,7 @@ export default function Home() {
       </div>
 
     {/* SearchBar 搜索栏*/}
-      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+      <div className="relative z-9 w-full h-full flex flex-col items-center justify-center">
 
       <span className="text-2xl font-light text-white mb-6">
         傻鱼导航站欢迎您

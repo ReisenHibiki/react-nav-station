@@ -11,6 +11,7 @@ import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StoreIcon from '@mui/icons-material/Store';
+import CloseIcon from '@mui/icons-material/Close';
 
 type NavItem = {
   label: string,
@@ -36,8 +37,10 @@ const iconMap: Record<string, React.ReactNode> = {
   buildtool: <BuildIcon style={{ fontSize: 22 }} />,
   market: <StoreIcon style={{ fontSize: 22 }}/>,
 }
-
-export default function Navbar() {
+type Props = {
+  onMenuClick: () => void;
+};
+export default function Navbar({onMenuClick}: Props) {
   const router = useRouter()
   const [active, setActive] = useState<string>("首页推荐")
 
@@ -51,7 +54,7 @@ export default function Navbar() {
       setTimeout(() => {
         const element = document.getElementById(target)        
         element?.scrollIntoView({ behavior: "smooth" })
-      }, 300)
+      }, 1000)
     } else {
         const element = document.getElementById(target)
         element?.scrollIntoView({ behavior: "smooth" })
@@ -64,20 +67,64 @@ export default function Navbar() {
   }
 
   return (
-    <div className="w-64 h-screen fixed
-      bg-white/80 backdrop-blur-xl 
-      border-r border-slate-200
-      shadow-sm">
+    <div className="
+      w-64 h-screen fixed
+      bg-white/60 backdrop-blur-2xl
+      border-r border-white/20
+      shadow-lg
+      select-none
+      flex flex-col
+    "
+    style={{
+      boxShadow: '0 0 40px rgba(0,0,0,0.05)',
+    }}>
+      {/* 装饰性光晕效果 */}
+      <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-blue-500/5 to-transparent pointer-events-none" />
 
-      <div className="p-5 flex flex-col gap-6">
+      <div className="p-5 flex flex-col gap-6 relative z-10">
 
-        {/* LOGO */}
-        <Link href={"/"} className="flex items-center gap-3 cursor-pointer">
-          <Image src="/face.png" alt="Logo" width={38} height={38} />
-          <span className="font-bold text-lg tracking-wide">
-            傻鱼导航站
-          </span>
-        </Link>
+        {/* 头部区域：Logo + 关闭按钮 */}
+        <div onClick={()=>{setActive("首页推荐");onMenuClick()}} className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-3 group"
+          >
+            <div className="relative">
+              <Image
+                src="/face.png"
+                alt="Logo"
+                width={38}
+                height={38}
+                className="transition-transform group-hover:scale-105"
+              />
+              {/* Logo 光晕 */}
+              <div className="absolute inset-0 blur-xl bg-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+            </div>
+
+            <span className="font-bold text-lg tracking-wide bg-linear-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+              傻鱼控制台
+            </span>
+          </Link>
+
+          {/* 关闭按钮 - 只在移动端显示 */}
+          <button
+            onClick={onMenuClick}
+            className="
+              sm:hidden
+              p-2
+              rounded-lg
+              hover:bg-red-100
+              backdrop-blur-sm
+              transition-all
+              -mr-2
+              hover:scale-105
+              active:scale-95
+            "
+            aria-label="关闭菜单"
+          >
+            <CloseIcon style={{ fontSize: 24 }} className="text-slate-600" />
+          </button>
+        </div>
 
         {/* MENU */}
         <div className="flex flex-col gap-1 mt-2">
@@ -90,55 +137,100 @@ export default function Navbar() {
                   key={item.label}
                   onClick={() => handleClick(item)}
                   className={`
-                    flex items-center gap-3 px-3 py-2 rounded-lg
-                    cursor-pointer transition-all duration-200
-                    hover:bg-slate-100 hover:translate-x-1
-                    relative select-none
-                    ${isActive ? "bg-slate-100 font-semibold" : ""}
+                    flex items-center gap-3 px-3 py-2.5 rounded-xl
+                    cursor-pointer transition-all duration-300
+                    hover:bg-white/40 hover:backdrop-blur-sm
+                    hover:translate-x-1 hover:shadow-sm
+                    relative select-none group
+                    ${isActive ? "bg-white/50 backdrop-blur-sm shadow-sm font-semibold" : "hover:bg-white/30"}
                   `}
                 >
                   {/* 左侧高亮条 */}
                   <div className={`
-                    absolute left-0 top-2 bottom-2 w-1 rounded-full
-                    transition-all
-                    ${isActive ? "bg-blue-500" : "bg-transparent"}
+                    absolute left-0 top-1/2 -translate-y-1/2
+                    w-1 h-6 rounded-full transition-all duration-300
+                    ${isActive 
+                      ? "bg-linear-to-b from-blue-500 to-blue-600 h-8" 
+                      : "bg-transparent group-hover:bg-blue-200/50 group-hover:h-4"
+                    }
                   `} />
 
+                  {/* 图标容器 */}
+                  <div className={`
+                    transition-all duration-300
+                    ${isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-700'}
+                  `}>
                     {iconMap[item.icon]}
+                  </div>
 
-                  <span className="text-lg">
+                  <span className={`
+                    text-lg transition-colors duration-300
+                    ${isActive ? 'text-slate-800' : 'text-slate-600 group-hover:text-slate-800'}
+                  `}>
                     {item.label}
                   </span>
+
+                  {/* 激活状态指示点 */}
+                  {isActive && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  )}
                 </div>
               )
-            } else  {
+            } else {
               return (
-                <Link href={item.target} onClick={() => {{handleLink(item)}}}
+                <Link 
+                  href={item.target} 
+                  onClick={() => handleLink(item)}
                   key={item.label}
                   className={`
-                    flex items-center gap-3 px-3 py-2 rounded-lg
-                    cursor-pointer transition-all duration-200
-                    hover:bg-slate-100 hover:translate-x-1
-                    relative select-none
-                    ${isActive ? "bg-slate-100 font-semibold" : ""}
+                    flex items-center gap-3 px-3 py-2.5 rounded-xl
+                    cursor-pointer transition-all duration-300
+                    hover:bg-white/40 hover:backdrop-blur-sm
+                    hover:translate-x-1 hover:shadow-sm
+                    relative select-none group
+                    ${isActive ? "bg-white/50 backdrop-blur-sm shadow-sm font-semibold" : "hover:bg-white/30"}
                   `}
                 >
                   {/* 左侧高亮条 */}
                   <div className={`
-                    absolute left-0 top-2 bottom-2 w-1 rounded-full
-                    transition-all
-                    ${isActive ? "bg-blue-500" : "bg-transparent"}
+                    absolute left-0 top-1/2 -translate-y-1/2
+                    w-1 h-6 rounded-full transition-all duration-300
+                    ${isActive 
+                      ? "bg-linear-to-b from-blue-500 to-blue-600 h-8" 
+                      : "bg-transparent group-hover:bg-blue-200/50 group-hover:h-4"
+                    }
                   `} />
 
+                  {/* 图标容器 */}
+                  <div className={`
+                    transition-all duration-300
+                    ${isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-700'}
+                  `}>
                     {iconMap[item.icon]}
+                  </div>
 
-                  <span className="text-lg">
+                  <span className={`
+                    text-lg transition-colors duration-300
+                    ${isActive ? 'text-slate-800' : 'text-slate-600 group-hover:text-slate-800'}
+                  `}>
                     {item.label}
                   </span>
+
+                  {/* 激活状态指示点 */}
+                  {isActive && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  )}
                 </Link>
               )
             }
           })}
+        </div>
+
+        {/* 底部装饰 */}
+        <div className="mt-auto pt-4 border-t border-white/20">
+          <div className="text-xs text-slate-400/60 text-center">
+            v2.0.0
+          </div>
         </div>
 
       </div>
