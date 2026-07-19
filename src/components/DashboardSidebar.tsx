@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 import PersonIcon from '@mui/icons-material/Person'
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 
 type NavItem = {
   label: string
@@ -32,12 +33,18 @@ const navItems: NavItem[] = [
     href: "/dashboard/wallet",
     icon: "wallet",
   },
+    {
+    label: "用户反馈",
+    href: "/dashboard/feedback",
+    icon: "feedback",
+  },
 ]
 
 const iconMap: Record<string, React.ReactNode> = {
   profile: <PersonIcon style={{ fontSize: 22 }} />,
   settlement: <HolidayVillageIcon style={{ fontSize: 22 }} />,
   wallet: <AccountBalanceWalletIcon style={{ fontSize: 22 }}/>,
+  feedback: <FeedbackIcon style={{ fontSize: 22 }}/>
 }
 
 export default function DashboardSidebar() {

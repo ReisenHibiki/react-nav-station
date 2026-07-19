@@ -1,5 +1,5 @@
 import WalletPanel from "@/components/wallet/WalletPanel";
-
+import ComingSoon from "@/components/ComingSoon";
 
 export default function WalletPage(){
 
@@ -7,7 +7,7 @@ export default function WalletPage(){
     <div className="space-y-6">
 
       <WalletPanel />
-
+      <ComingSoon />
 
     </div>
   );
