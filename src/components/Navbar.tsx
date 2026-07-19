@@ -230,7 +230,7 @@ export default function Navbar({onMenuClick}: Props) {
         {/* 底部装饰 */}
         <div className="mt-auto pt-4 border-t border-white/20">
           <div className="text-xs text-slate-400/60 text-center">
-            v2.0.0
+            小鱼导航
           </div>
         </div>
 
