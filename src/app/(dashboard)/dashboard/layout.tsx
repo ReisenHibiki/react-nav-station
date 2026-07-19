@@ -14,7 +14,7 @@ export default function PublicLayout({
 
   return (
     <div className="min-h-screen flex bg-slate-50 relative">
-      <div className={`${open ? '' : 'hidden'} sm:block sm:w-64 h-screen shrink-0 fixed z-10`}>
+      <div className={`${open ? '' : 'hidden'} sm:block sm:w-64 h-screen shrink-0 relative z-10`}>
         <DashboardSidebar onMenuClick={()=>setOpen(!open)}/>
       </div>
 
