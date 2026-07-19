@@ -54,7 +54,7 @@ export default function Navbar({onMenuClick}: Props) {
       setTimeout(() => {
         const element = document.getElementById(target)        
         element?.scrollIntoView({ behavior: "smooth" })
-      }, 2500)
+      }, 1000)
     } else {
         const element = document.getElementById(target)
         element?.scrollIntoView({ behavior: "smooth" })
@@ -135,7 +135,7 @@ export default function Navbar({onMenuClick}: Props) {
               return (
                 <div
                   key={item.label}
-                  onClick={() => handleClick(item)}
+                  onClick={() => {handleClick(item); onMenuClick()}}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
                     cursor-pointer transition-all duration-300
@@ -177,10 +177,11 @@ export default function Navbar({onMenuClick}: Props) {
                 </div>
               )
             } else {
+              // 非分区，跳转菜单
               return (
                 <Link 
                   href={item.target} 
-                  onClick={() => handleLink(item)}
+                  onClick={() => {handleLink(item); onMenuClick()}}
                   key={item.label}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
