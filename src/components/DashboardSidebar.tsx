@@ -189,7 +189,7 @@ export default function DashboardSidebar({onMenuClick}: Props) {
         {/* 底部装饰 */}
         <div className="mt-auto pt-4 border-t border-white/20">
           <div className="text-xs text-slate-400/60 text-center">
-            小鱼面板
+            控制面板
           </div>
         </div>
       </div>

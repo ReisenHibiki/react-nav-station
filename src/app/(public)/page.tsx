@@ -89,7 +89,7 @@ export default function Home() {
         傻鱼导航站欢迎您
       </span>
 
-      <div className="w-105 flex items-center bg-white 
+      <div className="w-85 md:w-125 flex items-center bg-white 
         rounded-full shadow-md border border-slate-200
         px-4 py-2
         focus-within:ring-2 focus-within:ring-blue-400

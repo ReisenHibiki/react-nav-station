@@ -54,7 +54,7 @@ export default function Navbar({onMenuClick}: Props) {
       setTimeout(() => {
         const element = document.getElementById(target)        
         element?.scrollIntoView({ behavior: "smooth" })
-      }, 2500)
+      }, 1000)
     } else {
         const element = document.getElementById(target)
         element?.scrollIntoView({ behavior: "smooth" })
@@ -135,7 +135,7 @@ export default function Navbar({onMenuClick}: Props) {
               return (
                 <div
                   key={item.label}
-                  onClick={() => handleClick(item)}
+                  onClick={() => {handleClick(item); onMenuClick()}}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
                     cursor-pointer transition-all duration-300
@@ -177,10 +177,11 @@ export default function Navbar({onMenuClick}: Props) {
                 </div>
               )
             } else {
+              // 非分区，跳转菜单
               return (
                 <Link 
                   href={item.target} 
-                  onClick={() => handleLink(item)}
+                  onClick={() => {handleLink(item); onMenuClick()}}
                   key={item.label}
                   className={`
                     flex items-center gap-3 px-3 py-2.5 rounded-xl
@@ -229,7 +230,7 @@ export default function Navbar({onMenuClick}: Props) {
         {/* 底部装饰 */}
         <div className="mt-auto pt-4 border-t border-white/20">
           <div className="text-xs text-slate-400/60 text-center">
-            v2.0.0
+            小鱼导航
           </div>
         </div>
 
