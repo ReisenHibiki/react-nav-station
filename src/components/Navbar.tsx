@@ -54,7 +54,7 @@ export default function Navbar({onMenuClick}: Props) {
       setTimeout(() => {
         const element = document.getElementById(target)        
         element?.scrollIntoView({ behavior: "smooth" })
-      }, 1000)
+      }, 2500)
     } else {
         const element = document.getElementById(target)
         element?.scrollIntoView({ behavior: "smooth" })
