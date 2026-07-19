@@ -7,7 +7,8 @@ import {
   settlements,
   settlementMembers,
   profiles,
-  settlementRequests
+  settlementRequests,
+  comments
 } from "@/db/schema";
 
 // 查询用户所在聚落的settlement,card,members GET
@@ -555,6 +556,21 @@ export async function DELETE(){
               eq(
                 cards.id,
                 settlement.cardId
+              )
+            );
+            // 删除聚落时删除评论中targetId和卡片Id一致的row
+          await tx
+            .delete(comments)
+            .where(
+              and(
+                eq(
+                  comments.targetType,
+                  "settlement"
+                ),
+                eq(
+                  comments.targetId,
+                  String(settlement.cardId)
+                )
               )
             );
           return;
