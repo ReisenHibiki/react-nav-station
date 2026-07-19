@@ -1,9 +1,10 @@
-import CardHeader from "./CardHeader";
+import CardHeader from "@/components/cardDetail/CardHeader";
 import { SettlementCard } from "@/types/card";
 import StatusIcon from "@/components/StatusIcon"
-import { MemberList } from "../settlement/MemberList";
+import { MemberList } from "@/components/settlement/MemberList";
 import Advertisement from "@/components/Advertisement"
 import Comment from "@/components/comment/Comment";
+import SettlementRule from "@/components/settlement/SettlementRule";
 
 type Props = {
   card: SettlementCard;
@@ -16,6 +17,7 @@ export default function SettlementDetail({ card }: Props) {
 
         <CardHeader card={card}>
           <StatusIcon statusData={card.settlement.status}/>
+          {card.settlement.rules ? <SettlementRule rules={card.settlement.rules}/> : ''}          
         </CardHeader>
 
         <div className="mt-6 w-full rounded-2xl shadow-md">

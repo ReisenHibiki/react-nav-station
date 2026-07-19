@@ -5,6 +5,7 @@ import Avatar from "@/components/Avatar";
 import StatusIcon from "@/components/StatusIcon";
 import Link from "next/link";
 import { MemberList } from "@/components/settlement/MemberList";
+import SettlementRule from "@/components/settlement/SettlementRule";
 
 
 type Props = {
@@ -155,19 +156,8 @@ export default function SettlementDetail({ settlement, role }: Props) {
             </span>
           </p>
 
-          {
-            settlement.rules && (
-              <div>
-                <p className="text-gray-900 font-medium mb-1">
-                  聚落规则
-                </p>
-
-                <p className="bg-gray-50 rounded-xl p-3 text-sm">
-                  {settlement.rules}
-                </p>
-              </div>
-            )
-          }
+          {settlement.rules ? <SettlementRule rules={settlement.rules}/> : ''}
+          
 
         </div>
 

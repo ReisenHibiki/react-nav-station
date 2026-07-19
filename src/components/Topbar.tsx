@@ -174,7 +174,7 @@ const Topnav = ({onMenuClick}: Props) => {
                 className="block px-4 py-3 text-sm hover:bg-gray-100 transition"
                 onClick={() => setOpen(false)}
               >
-                个人主页
+                控制面板
               </Link>
 
               <button

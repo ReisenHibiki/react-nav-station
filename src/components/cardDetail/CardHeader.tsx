@@ -28,11 +28,11 @@ export default function CardHeader({ card, children }: Props) {
           </div>
         </div>
 
-        <p className="text-gray-600 leading-8 mt-4">
+        <p className="text-gray-500 leading-8 mt-4">
           {card.description}
         </p>
         
-        <div>
+        <div className="space-y-3">
             {children}
         </div>
         
