@@ -4,8 +4,10 @@ import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/Avatar";
 import Loading from "@/components/Loading";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import MenuIcon from "@mui/icons-material/Menu";
+
 
 type Props = {
   onMenuClick?: () => void;
@@ -20,6 +22,9 @@ const Topnav = ({onMenuClick}: Props) => {
   const [isLoading, setIsLoading] = useState(true)
   
   const router = useRouter()
+  const pathname = usePathname()
+  const isDashboard = pathname?.startsWith('/dashboard');
+
   const menuRef = useRef<HTMLDivElement>(null);
 
     // 登出退出登录处理
@@ -97,17 +102,28 @@ const Topnav = ({onMenuClick}: Props) => {
       {/* Left */}
     <div className="flex items-center gap-3">
         {/* 手机/小屏菜单按钮 */}
-        <button
-          onClick={onMenuClick}
-          className="
-            sm:hidden
-            p-2
-            rounded-lg
-            hover:bg-gray-100
-          "
-        >
-          ☰
-        </button>
+      <button
+        onClick={onMenuClick}
+        className="
+          sm:hidden
+          py-2
+          px-4
+          rounded-2xl
+          bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500
+          text-white
+          shadow-lg shadow-purple-500/40
+          hover:shadow-2xl hover:shadow-purple-500/50
+          hover:scale-110
+          active:scale-95
+          transition-all duration-300
+          font-medium
+          flex items-center gap-1
+          border border-white/20
+        "
+      >
+        <MenuIcon fontSize="small" />
+        <span className="text-sm font-semibold">{isDashboard?"面板":"首页"}</span>
+      </button>
 
         <Link 
           href={'/'}
