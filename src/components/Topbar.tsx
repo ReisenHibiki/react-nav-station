@@ -127,7 +127,7 @@ const Topnav = ({onMenuClick}: Props) => {
 
         <Link 
           href={'/'}
-          className="ml-3 text-sm text-gray-500 font-light"
+          className="ml-2 text-sm text-gray-500 font-light"
         >
           傻鱼导航
         </Link>

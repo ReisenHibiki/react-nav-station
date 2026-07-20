@@ -2,31 +2,33 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { SettlementFormData } from "@/types/settlement";
+import type { SettlementFormData, Settlement } from "@/types/settlement";
 import { SETTLEMENT_STATUS } from "@/types/card";
+import BannerField from "./BannerField";
 
 type Props = {
   mode: "create" | "edit";
-  initialData?: SettlementFormData;
+  settlement?: Settlement;
   settlementId?: number;
 };
 
 export default function SettlementForm({
   mode,
-  initialData,
+  settlement,
   settlementId
 }: Props) {
   const router = useRouter();
 
   const [form, setForm] = useState<SettlementFormData>({
-    name: initialData?.name ?? "",
-    description: initialData?.description ?? "",
-    rules: initialData?.rules ?? "",
-    status: initialData?.status ?? SETTLEMENT_STATUS.ACTIVE,
+    name: settlement?.card.name ?? "",
+    description: settlement?.card.description ?? "",
+    rules: settlement?.rules ?? "",
+    status: (settlement?.status as SettlementFormData["status"]) ?? SETTLEMENT_STATUS.ACTIVE,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
 
   function updateField<K extends keyof SettlementFormData>(
     key: K,
@@ -75,6 +77,39 @@ export default function SettlementForm({
       setLoading(false);
     }
   }
+
+  // 图片上传部分状态
+  const [bannerFile, setBannerFile] =
+  useState<File | null>(null);
+
+  const originalBanner = settlement?.banner ?? null;
+  const [bannerPreview, setBannerPreview] =
+    useState<string | null>(
+      originalBanner
+    );
+  // 图片上传处理函数 - 接收组件参数并且告诉组件preview值
+  function handleBannerChange(file: File) {
+    // 如果当前预览是本地 blob，先释放
+    if (bannerPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(bannerPreview);
+    }
+    
+    const preview = URL.createObjectURL(file);
+    setBannerFile(file);
+    setBannerPreview(preview);
+  }
+  // 图片删除处理函数
+  function handleBannerRemove() {
+    if (
+        bannerPreview?.startsWith("blob:")
+    ) {
+        URL.revokeObjectURL(
+            bannerPreview
+        );
+    }
+    setBannerFile(null);
+    setBannerPreview(originalBanner);
+}
 
   // 状态标签配置
   const statusConfig = {
@@ -343,6 +378,27 @@ export default function SettlementForm({
               focus:ring-gray-100
               hover:border-gray-300
             "
+          />
+        </div>
+
+        {/* 海报图片上传 */}
+        <div>
+          <label className="
+            block
+            text-sm
+            font-semibold
+            text-gray-700
+            mb-2
+          ">
+            聚落海报
+            <span className="text-gray-400 text-xs font-normal ml-2">选填</span>
+          </label>
+          
+          <BannerField 
+              preview={bannerPreview}
+              disabled={loading}
+              onChange={handleBannerChange}
+              onRemove={handleBannerRemove}
           />
         </div>
 

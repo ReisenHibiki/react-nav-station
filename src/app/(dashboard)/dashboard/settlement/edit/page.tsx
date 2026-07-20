@@ -38,17 +38,7 @@ export default function EditSettlementPage(){
 
       mode="edit"
 
-      initialData={{
-
-        name:settlement.card.name,
-
-        description:settlement.card.description ?? "",
-
-        rules:settlement.rules ?? "",
-
-        status:settlement.status as SettlementStatus
-
-      }}
+      settlement={settlement}
 
     />
   );

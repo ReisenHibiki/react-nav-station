@@ -24,7 +24,6 @@ export default function Banner(){
           .from('websiteBucket')
           .list('websiteBanner')
 
-        console.log("files =", files);
 
         // 检查
         if (error) {
@@ -46,7 +45,6 @@ export default function Banner(){
           return publicUrl
         })
 
-        console.log('生成的图片 URLs:', imageUrls)
         setImages(imageUrls)
 
       } catch (error) {
