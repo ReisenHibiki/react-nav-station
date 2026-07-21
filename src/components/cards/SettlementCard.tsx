@@ -3,6 +3,7 @@ import {
   SettlementCard as SettlementCardType,
   SETTLEMENT_STATUS,
 } from "@/types/card";
+import Image from "next/image";
 
 type Props = {
   card: SettlementCardType;
@@ -78,7 +79,7 @@ export default function SettlementCard({ card }: Props) {
 
         {/* Icon */}
         <div className="w-2/5 flex items-center justify-center">
-          <img
+          <Image
             src={
               card.icon ??
               "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/VallNeko.png"
@@ -87,6 +88,7 @@ export default function SettlementCard({ card }: Props) {
             width={60}
             height={60}
             className="rounded-lg"
+            sizes="60px"
           />
         </div>
 

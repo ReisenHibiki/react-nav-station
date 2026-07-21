@@ -7,6 +7,7 @@ import Loading from "@/components/Loading";
 import {Card} from "@/types/card"
 import CardRenderer from "@/components/cards/CardRenderer";
 import Banner from "@/components/Banner";
+import Button from "@mui/material/Button";
 
 type Section = {
   title: string,
@@ -128,7 +129,33 @@ export default function Home() {
         <div className="w-full flex flex-col gap-4 p-6 select-none" 
         key={section.title}
         id={section.title}>
-          <p className="font-bold text-2xl ml-4 mt-2">{section.title}</p>
+          <p className="font-bold text-2xl ml-4 mt-2">
+            {section.title}          
+          {section.title === "寻找聚落" ? 
+          <Link 
+          href={'/dashboard/settlement'}
+          className="
+            inline-flex
+            items-center gap-1
+            px-3 pt-1 ml-2 pb-0.5
+            text-sm font-semibold
+            text-white
+            bg-gray-400
+            rounded-xl
+            shadow-lg shadow-indigo-200/50 hover:shadow-indigo-300/50
+            transition-all duration-300
+            hover:scale-105
+            active:scale-95
+          "
+        >
+          <span>探索聚落</span>
+          <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+            : ''}
+          </p>
+
 
           {/* card 卡片部分 */}
           <div className="flex flex-wrap gap-4 cursor-pointer">

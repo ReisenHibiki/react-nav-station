@@ -6,6 +6,7 @@ import { Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 
 export default function Banner(){
@@ -66,10 +67,13 @@ export default function Banner(){
       {images.map((item)=>{
         return (
           <SwiperSlide>
-            <img
+            <Image
               className="w-full h-full object-cover"
               src={`${item}`}
-              alt=""
+              alt="封面海报"
+              fill
+              priority
+              sizes="100vw"
             />
           </SwiperSlide>          
         )

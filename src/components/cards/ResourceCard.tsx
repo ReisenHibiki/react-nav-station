@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {ResourceCard as ResourceCardType} from "@/types/card"
+import Image from "next/image";
 
 
 type Props = {
@@ -19,7 +20,7 @@ export default function ResourceCard({ card }: Props) {
         flex items-center"
       >
         <div className="w-2/5 flex items-center justify-center">
-          <img
+          <Image
             src={
               card.icon ??
               `https://www.google.com/s2/favicons?domain=${card.link}&sz=48`
@@ -28,6 +29,7 @@ export default function ResourceCard({ card }: Props) {
             width={60}
             height={60}
             className="rounded-lg"
+            sizes="60px"
           />
         </div>
 
