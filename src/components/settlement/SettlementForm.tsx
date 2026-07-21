@@ -2,31 +2,35 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { SettlementFormData } from "@/types/settlement";
+import type { SettlementFormData, Settlement } from "@/types/settlement";
 import { SETTLEMENT_STATUS } from "@/types/card";
+import BannerField from "./BannerField";
+import { getStoragePublicUrl } from "@/lib/supabase/storage";
+import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   mode: "create" | "edit";
-  initialData?: SettlementFormData;
+  settlement?: Settlement;
   settlementId?: number;
 };
 
 export default function SettlementForm({
   mode,
-  initialData,
+  settlement,
   settlementId
 }: Props) {
   const router = useRouter();
 
   const [form, setForm] = useState<SettlementFormData>({
-    name: initialData?.name ?? "",
-    description: initialData?.description ?? "",
-    rules: initialData?.rules ?? "",
-    status: initialData?.status ?? SETTLEMENT_STATUS.ACTIVE,
+    name: settlement?.card.name ?? "",
+    description: settlement?.card.description ?? "",
+    rules: settlement?.rules ?? "",
+    status: (settlement?.status as SettlementFormData["status"]) ?? SETTLEMENT_STATUS.ACTIVE,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
 
   function updateField<K extends keyof SettlementFormData>(
     key: K,
@@ -66,6 +70,14 @@ export default function SettlementForm({
         throw new Error(data.message ?? "操作失败");
       }
 
+      // 图片上传函数
+      const currentSettlementId =
+      mode==="create" ? data.settlementId : settlement!.id;
+
+      await uploadBanner(
+        currentSettlementId
+      );
+
       router.replace("/dashboard/settlement");
     } catch (err) {
       if (err instanceof Error) {
@@ -74,6 +86,74 @@ export default function SettlementForm({
     } finally {
       setLoading(false);
     }
+  }
+
+  // 图片上传部分状态
+  const [bannerFile, setBannerFile] =
+  useState<File | null>(null);
+  // 图片Preview部分
+  const supabase = createClient()
+
+  const originalBanner = getStoragePublicUrl(supabase,"settlement-banners",settlement?.banner) ?? null;
+
+  const [bannerPreview, setBannerPreview] =
+    useState<string | null>(
+      originalBanner
+    );
+  // 图片上传处理函数 - 接收组件参数并且告诉组件preview值
+  function handleBannerChange(file: File) {
+    // 如果当前预览是本地 blob，先释放
+    if (bannerPreview?.startsWith("blob:")) {
+      URL.revokeObjectURL(bannerPreview);
+    }
+    
+    const preview = URL.createObjectURL(file);
+    setBannerFile(file);
+    setBannerPreview(preview);
+  }
+  // 图片删除处理函数
+  function handleBannerRemove() {
+    if (
+        bannerPreview?.startsWith("blob:")
+    ) {
+        URL.revokeObjectURL(
+            bannerPreview
+        );
+    }
+    setBannerFile(null);
+    setBannerPreview(originalBanner);
+  }
+  // 上传图片函数
+  async function uploadBanner(
+      settlementId:number
+  ){
+      if(!bannerFile){
+          return;
+      }
+
+      const formData = new FormData();
+
+      formData.append(
+          "banner",
+          bannerFile
+      );
+
+      const res = await fetch(
+          `/api/settlement/${settlementId}/banner`,
+          {
+              method:"POST",
+              body:formData,
+          }
+      );
+
+      const data = await res.json();
+
+      if(!res.ok){
+          throw new Error(
+              data.message ??
+              "上传海报失败"
+          );
+      }
   }
 
   // 状态标签配置
@@ -99,6 +179,7 @@ export default function SettlementForm({
   };
 
   return (
+    <div className="flex justify-center items-center select-none">
     <div className="
       w-full max-w-xl
       bg-white
@@ -346,6 +427,27 @@ export default function SettlementForm({
           />
         </div>
 
+        {/* 海报图片上传 */}
+        <div>
+          <label className="
+            block
+            text-sm
+            font-semibold
+            text-gray-700
+            mb-2
+          ">
+            聚落海报
+            <span className="text-gray-400 text-xs font-normal ml-2">选填</span>
+          </label>
+          
+          <BannerField 
+              preview={bannerPreview}
+              disabled={loading}
+              onChange={handleBannerChange}
+              onRemove={handleBannerRemove}
+          />
+        </div>
+
 
 
         {error && (
@@ -417,6 +519,7 @@ export default function SettlementForm({
           )}
         </button>
       </form>
+    </div>
     </div>
   );
 }

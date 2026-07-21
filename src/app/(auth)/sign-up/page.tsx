@@ -4,6 +4,7 @@ import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 
 export default function SignUpPage() {
@@ -25,6 +26,11 @@ export default function SignUpPage() {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const supabase = createClient()
+
+  const { data: { publicUrl } } = supabase.storage
+  .from('websiteBucket')
+  .getPublicUrl(`websiteBg/momi.webp`)
 
 
   // 更新表单数据
@@ -47,7 +53,7 @@ export default function SignUpPage() {
   };
 
 
-
+  // 登录处理函数
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -131,6 +137,7 @@ export default function SignUpPage() {
     }
   };
 
+
   // render渲染部分
   return (
     <main
@@ -142,6 +149,9 @@ export default function SignUpPage() {
       bg-gray-50
       px-4 select-none
       "
+      style={{
+      backgroundImage: `url(${publicUrl})`,
+      }}
     >
       {/* 后端Message气泡代码 */}
             {

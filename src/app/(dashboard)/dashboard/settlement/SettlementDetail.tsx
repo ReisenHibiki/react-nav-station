@@ -48,7 +48,7 @@ export default function SettlementDetail({ settlement, role }: Props) {
     <div className="w-full max-w-3xl mx-auto p-6 space-y-6">
 
       {/* 聚落头部 */}
-      <section className="bg-white rounded-2xl shadow-sm p-8">
+      <section className="bg-white rounded-2xl shadow-sm p-8 select-none">
 
         <div className="flex flex-col items-center text-center">
 

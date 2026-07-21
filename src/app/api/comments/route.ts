@@ -1,14 +1,11 @@
 import { db } from "@/db";
 import { comments, profiles } from "@/db/schema";
-import { eq, and, desc, count, lt, or } from "drizzle-orm";
+import { eq, and, desc, count, lt, or, gt } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { ALLOWED_COMMENT_TYPES, CommentType } from "@/types/comment";
 
-const allowedTargetTypes=[
- "card",
- "profile",
- "settlement"
-];
+const allowedTargetTypes=ALLOWED_COMMENT_TYPES;
 
 // 使用cursor pagination游标
 export async function GET(request: NextRequest) {
@@ -17,7 +14,7 @@ export async function GET(request: NextRequest) {
     const {data:{user}}=await supabase.auth.getUser();
 
     const searchParams = request.nextUrl.searchParams
-    const targetType = searchParams.get("targetType");
+    const targetType = searchParams.get("targetType") as CommentType;
     const targetId = searchParams.get("targetId");
     
     // 限制最大 limit 为 100 并且校验合法参数
@@ -181,6 +178,69 @@ export async function POST(request: Request) {
       );
     }
 
+    // 防止滥发评论，检查评论冷却
+    const lastComment = await db
+    .select({
+      createdAt: comments.createdAt
+    })
+    .from(comments)
+    .where(
+      eq(comments.userId, user.id)
+    )
+    .orderBy(
+      desc(comments.createdAt)
+    )
+    .limit(1);
+
+    if(lastComment.length > 0){
+      const lastTime = lastComment[0].createdAt.getTime();
+      const now = Date.now();
+
+      const diff = (now - lastTime) / 1000;
+      const CD = 10
+      if(diff < CD){
+        return NextResponse.json(
+          {
+            message: `请等待 ${Math.ceil(CD - diff)} 秒后再试`
+          },
+          {
+            status:429
+          }
+        );
+      }
+    }
+
+   // 防止滥发评论一天只能发30条
+    const startOfDay = new Date();
+    startOfDay.setHours(0,0,0,0);
+
+    const todayComments = await db
+    .select({
+      count:count()
+    })
+    .from(comments)
+    .where(
+      and(
+        eq(comments.userId,user.id),
+        gt(
+          comments.createdAt,
+          startOfDay
+        )
+      )
+    );
+
+    if(todayComments[0].count >= 20){
+      return NextResponse.json(
+        {
+          message:"每日评论数量已达到上限"
+        },
+        {
+          status:429
+        }
+      );
+    }
+  
+
     // 插入评论
     const result = await db
       .insert(comments)
@@ -224,7 +284,7 @@ export async function POST(request: Request) {
     console.error("Create Comment Error:", error);
 
     return NextResponse.json(
-      { message: "Failed to create comment" },
+      { message: "发布评论失败" },
       { status: 500 }
     );
   }

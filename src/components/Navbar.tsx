@@ -12,6 +12,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StoreIcon from '@mui/icons-material/Store';
 import CloseIcon from '@mui/icons-material/Close';
+import LiquorIcon from '@mui/icons-material/Liquor';
 
 type NavItem = {
   label: string,
@@ -27,6 +28,7 @@ const navItems: NavItem[] = [
   { label: "实用工具", icon: "buildtool", type: "scroll", target: "实用工具" },
   { label: "皮肤站", icon: "awesome", type: "scroll", target: "皮肤站" },
   { label: "小鱼交易所", icon: "market", type: "route", target: "/market" },
+  { label: "小鱼酒馆", icon: "bar", type: "route", target: "/bar" },
 ]
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -36,6 +38,7 @@ const iconMap: Record<string, React.ReactNode> = {
   awesome: <AutoAwesomeIcon style={{ fontSize: 22 }} />,
   buildtool: <BuildIcon style={{ fontSize: 22 }} />,
   market: <StoreIcon style={{ fontSize: 22 }}/>,
+  bar: <LiquorIcon style={{ fontSize: 22 }}/>,
 }
 type Props = {
   onMenuClick: () => void;

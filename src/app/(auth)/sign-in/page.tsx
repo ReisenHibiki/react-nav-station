@@ -3,6 +3,7 @@ import { useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SignInPage() {
 
@@ -21,7 +22,13 @@ export default function SignInPage() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const supabase = createClient()
 
+  const { data: { publicUrl } } = supabase.storage
+  .from('websiteBucket')
+  .getPublicUrl(`websiteBg/momi.webp`)
+
+  
   const updateField = (
     key: keyof typeof form,
     value: string
@@ -97,7 +104,7 @@ export default function SignInPage() {
       setMessage("登录成功，正在跳转...");
 
       setTimeout(() => {
-        router.replace("/");
+        router.replace("/dashboard/settlement");
         router.refresh();
       }, 1000);
 
@@ -123,6 +130,9 @@ export default function SignInPage() {
       bg-gray-50
       px-4 select-none
       "
+      style={{
+      backgroundImage: `url(${publicUrl})`,
+      }}
     >
       {message && (
         <div

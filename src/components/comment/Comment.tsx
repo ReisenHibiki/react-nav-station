@@ -7,15 +7,18 @@ import Link from "next/link";
 import type {
   Comment,
   CommentsResponse,
-  Cursor
+  Cursor,
+  CommentType
 } from "@/types/comment";
 
 type Props = {
-  targetType: "card" | "profile" | "settlement";
+  name:string
+  targetType: CommentType;
   targetId: string;
 };
 
 export default function Comment({
+  name,
   targetType,
   targetId
 }: Props) {
@@ -112,8 +115,8 @@ const onSuccess = (comment:Comment) => {
       {/* 评论区标题 */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          留言区
-          {comments.length > 0 && (
+          {name}
+          {comments.length > 0 && targetType !== 'post' && (
             <span className="ml-2 text-sm font-normal text-gray-500">
               ({comments.length})
             </span>

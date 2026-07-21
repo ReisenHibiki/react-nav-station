@@ -266,7 +266,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           message:"创建成功",
-          data:result
+          data:result,
+          settlementId: result.settlement.id,
         },
         {
           status:201
@@ -470,6 +471,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 
+
 // DELETE 删除接口
 export async function DELETE(){
 
@@ -521,6 +523,8 @@ export async function DELETE(){
       );
     }
 
+    let deletedBannerPath:string|null=null;
+
     await db.transaction(
       async(tx)=>{
         // 查询当前聚落全部成员
@@ -540,7 +544,8 @@ export async function DELETE(){
         if(members.length === 1){
           const [settlement] = await tx
             .select({
-              cardId:settlements.cardId
+              cardId:settlements.cardId,
+              id: settlements.id
             })
             .from(settlements)
             .where(
@@ -573,6 +578,9 @@ export async function DELETE(){
                 )
               )
             );
+            // 提供删除聚落海报图片地址
+            deletedBannerPath =
+              `${settlement.id}/banner.webp`;
           return;
         }
 
@@ -620,6 +628,15 @@ export async function DELETE(){
 
       }
     );
+    // 若聚落被删除则删除聚落Storage孤儿文件夹
+    if(deletedBannerPath){
+      await supabase.storage
+        .from("settlement-banners")
+        .remove([
+            deletedBannerPath
+        ]);
+    }
+    
 
     return NextResponse.json({
       message:"退出成功"
