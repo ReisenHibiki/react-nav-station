@@ -16,7 +16,7 @@ const SettlementBanner = ({ card, bannerUrl }: Props) => {
             <div className="relative w-full aspect-21/9">
               <Image
                 src={bannerUrl}
-                alt='聚落'
+                alt='聚落海报'
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 priority
@@ -85,7 +85,7 @@ const SettlementBanner = ({ card, bannerUrl }: Props) => {
           </div>
         ) : (
           // 无banner时的占位
-          <div className="relative mt-4 w-full aspect-21/9 rounded-2xl bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center border-2 border-dashed border-indigo-200">
+          <div className="relative mt-4 w-full aspect-21/9 rounded-2xl bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center border-2 border-dashed border-indigo-200 select-none">
             <div className="text-center">
               <div className="w-15 h-15 mx-auto bg-linear-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mb-3">
                 <svg className="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
