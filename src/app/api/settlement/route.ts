@@ -266,7 +266,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           message:"创建成功",
-          data:result
+          data:result,
+          settlementId: result.settlement.id,
         },
         {
           status:201

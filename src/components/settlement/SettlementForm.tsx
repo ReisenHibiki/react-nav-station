@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { SettlementFormData, Settlement } from "@/types/settlement";
 import { SETTLEMENT_STATUS } from "@/types/card";
 import BannerField from "./BannerField";
+import { getStoragePublicUrl } from "@/lib/supabase/storage";
+import { createClient } from "@/lib/supabase/client";
 
 type Props = {
   mode: "create" | "edit";
@@ -68,6 +70,14 @@ export default function SettlementForm({
         throw new Error(data.message ?? "操作失败");
       }
 
+      // 图片上传函数
+      const currentSettlementId =
+      mode==="create" ? data.settlementId : settlement!.id;
+
+      await uploadBanner(
+        currentSettlementId
+      );
+
       router.replace("/dashboard/settlement");
     } catch (err) {
       if (err instanceof Error) {
@@ -81,8 +91,11 @@ export default function SettlementForm({
   // 图片上传部分状态
   const [bannerFile, setBannerFile] =
   useState<File | null>(null);
+  // 图片Preview部分
+  const supabase = createClient()
 
-  const originalBanner = settlement?.banner ?? null;
+  const originalBanner = getStoragePublicUrl(supabase,"settlement-banners",settlement?.banner) ?? null;
+
   const [bannerPreview, setBannerPreview] =
     useState<string | null>(
       originalBanner
@@ -109,7 +122,39 @@ export default function SettlementForm({
     }
     setBannerFile(null);
     setBannerPreview(originalBanner);
-}
+  }
+  // 上传图片函数
+  async function uploadBanner(
+      settlementId:number
+  ){
+      if(!bannerFile){
+          return;
+      }
+
+      const formData = new FormData();
+
+      formData.append(
+          "banner",
+          bannerFile
+      );
+
+      const res = await fetch(
+          `/api/settlement/${settlementId}/banner`,
+          {
+              method:"POST",
+              body:formData,
+          }
+      );
+
+      const data = await res.json();
+
+      if(!res.ok){
+          throw new Error(
+              data.message ??
+              "上传海报失败"
+          );
+      }
+  }
 
   // 状态标签配置
   const statusConfig = {
@@ -134,6 +179,7 @@ export default function SettlementForm({
   };
 
   return (
+    <div className="flex justify-center items-center select-none">
     <div className="
       w-full max-w-xl
       bg-white
@@ -473,6 +519,7 @@ export default function SettlementForm({
           )}
         </button>
       </form>
+    </div>
     </div>
   );
 }
