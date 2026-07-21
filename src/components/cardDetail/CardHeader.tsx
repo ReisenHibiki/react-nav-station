@@ -1,4 +1,5 @@
 import { Card } from "@/types/card";
+import Image from "next/image";
 
 type Props = {
   card: Card;
@@ -10,7 +11,7 @@ export default function CardHeader({ card, children }: Props) {
     <div>
       <div className="bg-white rounded-2xl shadow-md p-8">
         <div className="flex items-center gap-5">
-          <img
+          <Image
             src={
               card.icon ??
               `https://www.google.com/s2/favicons?domain=${card.link}&sz=48`
@@ -19,6 +20,7 @@ export default function CardHeader({ card, children }: Props) {
             width={64}
             height={64}
             className="rounded-xl select-none"
+            sizes="64px"
           />
 
           <div className="flex-1">
