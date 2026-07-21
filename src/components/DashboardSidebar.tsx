@@ -35,7 +35,7 @@ const navItems: NavItem[] = [
     icon: "wallet",
   },
     {
-    label: "用户反馈",
+    label: "反馈信箱",
     href: "/dashboard/feedback",
     icon: "feedback",
   },

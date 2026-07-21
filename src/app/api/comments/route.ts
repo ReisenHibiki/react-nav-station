@@ -3,12 +3,9 @@ import { comments, profiles } from "@/db/schema";
 import { eq, and, desc, count, lt, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { ALLOWED_COMMENT_TYPES, CommentType } from "@/types/comment";
 
-const allowedTargetTypes=[
- "card",
- "profile",
- "settlement"
-];
+const allowedTargetTypes=ALLOWED_COMMENT_TYPES;
 
 // 使用cursor pagination游标
 export async function GET(request: NextRequest) {
@@ -17,7 +14,7 @@ export async function GET(request: NextRequest) {
     const {data:{user}}=await supabase.auth.getUser();
 
     const searchParams = request.nextUrl.searchParams
-    const targetType = searchParams.get("targetType");
+    const targetType = searchParams.get("targetType") as CommentType;
     const targetId = searchParams.get("targetId");
     
     // 限制最大 limit 为 100 并且校验合法参数

@@ -43,7 +43,7 @@ export default async function SettlementDetail({ card }: Props) {
         </div>
 
         <Advertisement/>
-        <Comment targetId={String(card.id)} targetType="settlement"/>
+        <Comment name="留言区" targetId={String(card.id)} targetType="settlement"/>
       </div>
     </div>
   );

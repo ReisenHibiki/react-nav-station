@@ -28,7 +28,7 @@ export default function ResourceDetail({ card }: Props) {
         </CardHeader>
 
         <Advertisement/>
-        <Comment targetId={String(card.id)} targetType="settlement"/>
+        <Comment name="留言区" targetId={String(card.id)} targetType="settlement"/>
 
       </div>
     </div>

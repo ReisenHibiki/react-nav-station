@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Comment } from "@/types/comment";
+import { CommentType } from "@/types/comment";
 
 type Props = {
-  targetType: "card" | "profile" | "settlement";
+  targetType: CommentType;
   targetId: string;
   onSuccess: (comment:Comment) => void;
 };
@@ -56,7 +57,7 @@ export default function CommentInput({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 select-none">
       {/* 评论输入框 */}
       <div className="relative">
         <textarea
