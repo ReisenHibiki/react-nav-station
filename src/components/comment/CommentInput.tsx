@@ -38,19 +38,20 @@ export default function CommentInput({
           content: text
         })
       });
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error("Failed to create comment");
+        alert(`${data.message}`);
+        return
       }
 
       setContent("");
       
-      const data = await response.json()
       onSuccess(data.comment);
 
     } catch (error) {
       console.error(error);
-      alert("Failed to publish comment.");
+      alert("发布评论失败");
     } finally {
       setLoading(false);
     }
