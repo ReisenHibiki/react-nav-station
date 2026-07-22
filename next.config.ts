@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       hostname: "*.supabase.co",
     },
     {
-      protocol: 'http',
+      protocol: 'https',
       hostname: 'api.rms.net.cn',
       port: '',
       pathname: '/**',

@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     .values({
       id: data.user.id,
       username: data.user.user_metadata.username,
-      avatar: `http://api.rms.net.cn/head/${data.user.user_metadata.username}`
+      avatar: `https://api.rms.net.cn/head/${data.user.user_metadata.username}`
     })
     .onConflictDoNothing();
 
