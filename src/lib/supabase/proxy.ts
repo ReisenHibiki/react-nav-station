@@ -4,7 +4,6 @@ import { NextResponse, type NextRequest } from 'next/server'
 // 要保护的路由地址名称
 const protectedRoutes = [
   "/dashboard",
-  "/update-password",
 ];
 
 export async function updateSession(request: NextRequest) {
