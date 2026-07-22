@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UpdatePasswordPage() {
   const supabase = createClient();
+  const router = useRouter()
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -43,18 +45,24 @@ export default function UpdatePasswordPage() {
       password,
     });
 
-    setIsLoading(false);
 
     if (error) {
       setMessage(error.message);
       setIsSuccess(false);
+      setIsLoading(false);
       return;
     }
 
-    setMessage("✓ 密码修改成功");
+    await supabase.auth.signOut();
+
+    setMessage("✓ 密码修改成功,跳转中...");
     setIsSuccess(true);
     setPassword("");
     setConfirmPassword("");
+
+    setTimeout(() => {
+      router.replace("/sign-in");
+    }, 1000);
   }
 
 
