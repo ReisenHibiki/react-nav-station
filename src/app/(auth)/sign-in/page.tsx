@@ -267,6 +267,14 @@ export default function SignInPage() {
         >
           返回主页
         </Link>
+        <Link href="/forgot-password" 
+        className="
+          mt-2
+          font-extralight
+          hover:underline
+          ">
+          忘记密码？
+        </Link>
       </div>
     </main>
   );
