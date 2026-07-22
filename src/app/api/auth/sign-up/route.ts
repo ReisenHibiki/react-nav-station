@@ -43,7 +43,7 @@ try {
   }
 
     //验证完成
-    console.log(username, password);
+
     // Supabase
     const supabase = await createClient()
     const {data, error} = await supabase.auth.signUp({

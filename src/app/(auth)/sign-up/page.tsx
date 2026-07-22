@@ -221,7 +221,7 @@ export default function SignUpPage() {
             value={form.userId}
             error={errors.userId}
             onChangeFather={(value) =>
-              updateField("userId", value.replace(/[^a-zA-Z0-9]/g, ""))
+              updateField("userId", value.replace(/[^a-zA-Z0-9_]/g, ""))
             }
           />
           <AuthInput
