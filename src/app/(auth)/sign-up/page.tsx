@@ -291,7 +291,11 @@ export default function SignUpPage() {
 
       <Link href={'/'} className="flex justify-center hover:underline font-extralight mt-2">
         返回主页
-      </Link>        
+      </Link>  
+
+      <p className="text-center text-xs text-gray-300 mt-5">
+        如果没有收到邮件，请检查垃圾箱
+      </p> 
 
       </div>
 

@@ -53,12 +53,13 @@ try {
           data: {
             username,
         },
+        emailRedirectTo: `${process.env.SITE_URL}/sign-in`,
       },
     })
     if (error) {
         return NextResponse.json(
       {
-        message: error.message
+        message: error.message ?? "环境错误，请稍后重试"
       },
       {
         status: 400
