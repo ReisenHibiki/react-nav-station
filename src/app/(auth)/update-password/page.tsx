@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
 export default function UpdatePasswordPage() {
   const supabase = createClient();
-  const [verified, setVerified] = useState(false);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,34 +13,6 @@ export default function UpdatePasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-useEffect(() => {
-
-  async function exchangeCode() {
-    const params = new URLSearchParams(
-      window.location.search
-    );
-
-    const code = params.get("code");
-
-    if (!code) {
-      setMessage("无效的重置密码链接");
-      return;
-    }
-
-    const { error } =
-      await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      console.log(error);
-      setMessage("重置链接已失效，请重新申请");
-      return;
-    }
-    setVerified(true);
-  }
-
-  exchangeCode();
-
-}, []);
 
   async function handleUpdate(e: React.FormEvent) {
     e.preventDefault();
@@ -86,13 +57,6 @@ useEffect(() => {
     setConfirmPassword("");
   }
 
-  if (!verified) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      {message || "正在验证重置链接..."}
-    </div>
-    );
-  }
 
   return (
     <div className="select-none min-h-screen flex items-center justify-center bg-linear-to-br from-emerald-50 via-white to-teal-50 px-4">
@@ -189,7 +153,7 @@ useEffect(() => {
 
             <button
               type="submit"
-              disabled={!verified || isLoading}
+              disabled={isLoading}
               className="w-full py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-500 
                 hover:from-emerald-600 hover:to-teal-600 
                 active:scale-[0.98] transition-all duration-200 
