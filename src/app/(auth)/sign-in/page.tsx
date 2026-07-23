@@ -103,10 +103,8 @@ export default function SignInPage() {
       setSuccess(true);
       setMessage("登录成功，正在跳转...");
 
-      setTimeout(() => {
-        router.replace("/dashboard/settlement");
-        router.refresh();
-      }, 1000);
+      router.refresh();
+      router.replace("/dashboard/settlement");
 
     } catch {
       setSuccess(false);
