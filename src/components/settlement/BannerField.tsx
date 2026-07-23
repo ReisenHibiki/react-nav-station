@@ -9,7 +9,7 @@ type Props = {
   onRemove: () => void;
 };
 
-const MAX_SIZE = 1024 * 1024; // 1MB
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 const ALLOW_TYPES = [
   "image/jpeg",
@@ -47,7 +47,7 @@ export default function BannerField({
 
     // 大小检查
     if (file.size > MAX_SIZE) {
-      alert("图片大小不能超过 1MB");
+      alert("图片大小不能超过 5MB");
       e.target.value = "";
       return;
     }
@@ -142,7 +142,7 @@ export default function BannerField({
         </div>
 
         <p className="text-xs text-gray-500">
-        支持 JPG、PNG、WEBP，最大 1MB
+        支持 JPG、PNG、WEBP，最大 5MB
         </p>
 
     </div>

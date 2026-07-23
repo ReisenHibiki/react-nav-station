@@ -12,7 +12,7 @@ const ALLOW_TYPES = [
   "image/webp",
 ];
 
-const MAX_SIZE = 1024 * 1024;
+const MAX_SIZE = 5 * 1024 * 1024;
 
 const BANNER_BUCKET = "settlement-banners";
 
@@ -121,7 +121,7 @@ export async function POST(
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
         {
-          message: "图片不能超过 1MB",
+          message: "图片不能超过 5MB",
         },
         {
           status: 400,
