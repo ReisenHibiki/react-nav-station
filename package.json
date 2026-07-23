@@ -23,7 +23,7 @@
     "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sharp": "^0.35.3",
+    "sharp": "^0.34.5",
     "swiper": "^14.0.5"
   },
   "devDependencies": {

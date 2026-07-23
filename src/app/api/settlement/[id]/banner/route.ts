@@ -142,6 +142,7 @@ export async function POST(
     }
 
     const webpBuffer = await sharp(originalBuffer)
+      .rotate()
       .resize({
         width: 1200,
         height: 675,
@@ -152,6 +153,10 @@ export async function POST(
         quality: 80,
       })
       .toBuffer();
+
+      console.log({
+      input:file.size,
+      output:webpBuffer.length})
 
     // Storage Path
     const storagePath =
@@ -220,6 +225,16 @@ export async function POST(
       );
 
     }
+
+    const { data:fileData } =
+    await supabase.storage
+    .from(BANNER_BUCKET)
+    .download(storagePath);
+
+    console.log(
+    "uploaded size:",
+    fileData?.size
+    );
 
     // 成功返回
     return NextResponse.json({
