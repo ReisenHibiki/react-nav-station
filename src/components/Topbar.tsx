@@ -118,7 +118,6 @@ const Topnav = ({onMenuClick}: Props) => {
           transition-all duration-300
           font-medium
           flex items-center gap-1
-          border border-white/20
         "
       >
         <MenuIcon fontSize="small" />

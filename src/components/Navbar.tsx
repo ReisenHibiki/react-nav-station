@@ -23,8 +23,8 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "首页推荐", icon: "home", type: "scroll", target: "首页推荐" },
-  { label: "教程百科", icon: "library", type: "scroll", target: "教程百科" },
   { label: "寻找聚落", icon: "village", type: "scroll", target: "寻找聚落" },
+  { label: "教程百科", icon: "library", type: "scroll", target: "教程百科" },
   { label: "实用工具", icon: "buildtool", type: "scroll", target: "实用工具" },
   { label: "皮肤站", icon: "awesome", type: "scroll", target: "皮肤站" },
   { label: "小鱼交易所", icon: "market", type: "route", target: "/market" },
