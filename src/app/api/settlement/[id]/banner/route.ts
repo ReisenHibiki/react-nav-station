@@ -12,7 +12,7 @@ const ALLOW_TYPES = [
   "image/webp",
 ];
 
-const MAX_SIZE = 1024 * 1024;
+const MAX_SIZE = 5 * 1024 * 1024;
 
 const BANNER_BUCKET = "settlement-banners";
 
@@ -121,7 +121,7 @@ export async function POST(
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
         {
-          message: "图片不能超过 1MB",
+          message: "图片不能超过 5MB",
         },
         {
           status: 400,
@@ -142,6 +142,7 @@ export async function POST(
     }
 
     const webpBuffer = await sharp(originalBuffer)
+      .rotate()
       .resize({
         width: 1200,
         height: 675,
@@ -152,6 +153,10 @@ export async function POST(
         quality: 80,
       })
       .toBuffer();
+
+      console.log({
+      input:file.size,
+      output:webpBuffer.length})
 
     // Storage Path
     const storagePath =
@@ -220,6 +225,16 @@ export async function POST(
       );
 
     }
+
+    const { data:fileData } =
+    await supabase.storage
+    .from(BANNER_BUCKET)
+    .download(storagePath);
+
+    console.log(
+    "uploaded size:",
+    fileData?.size
+    );
 
     // 成功返回
     return NextResponse.json({

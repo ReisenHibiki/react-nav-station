@@ -1,13 +1,18 @@
+'use client'
 import Link from "next/link";
 import {
   SettlementCard as SettlementCardType,
   SETTLEMENT_STATUS,
 } from "@/types/card";
 import Image from "next/image";
+import { useState } from "react";
 
 type Props = {
   card: SettlementCardType;
 };
+
+const DEFAULT_ICON =
+  "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/missingIcon.webp";
 
 const statusConfig = {
   [SETTLEMENT_STATUS.RECRUITING]: {
@@ -33,6 +38,8 @@ const statusConfig = {
 export default function SettlementCard({ card }: Props) {
   const status =
     statusConfig[card.settlement.status] ?? statusConfig[SETTLEMENT_STATUS.ACTIVE];
+  const [imgSrc, setImgSrc] = useState(card.icon || DEFAULT_ICON);
+  const [errorMes, setErrorMes] = useState<string | null>(null)
 
   return (
     <Link
@@ -78,19 +85,25 @@ export default function SettlementCard({ card }: Props) {
         </div>
 
         {/* Icon */}
-        <div className="w-2/5 flex items-center justify-center">
+        {<div className="w-2/5 flex items-center justify-center">
           <Image
             src={
-              card.icon ??
-              "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/VallNeko.png"
+              imgSrc ??
+              "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/missingIcon.webp"
             }
             alt={card.name}
             width={60}
             height={60}
             className="rounded-lg"
             sizes="60px"
+            onError={() => {
+              if(imgSrc !== DEFAULT_ICON){
+                setImgSrc(DEFAULT_ICON);
+                setErrorMes("该用户ID未找到头像,请联系管理员");
+              }
+            }}
           />
-        </div>
+        </div>}
 
         {/* 内容 */}
         <div className="w-3/5 p-2 pr-4">
@@ -101,6 +114,10 @@ export default function SettlementCard({ card }: Props) {
           <p className="mt-1 text-xs lg:text-sm text-slate-500 line-clamp-2">
             {card.description}
           </p>
+
+          {errorMes ? <p className="mt-3 text-[10px] lg:text-[10px] text-slate-400 line-clamp-1">
+            {errorMes}
+          </p> : ''}
         </div>
       </div>
     </Link>
