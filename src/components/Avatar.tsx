@@ -1,4 +1,7 @@
+'use client'
 import React from "react";
+import Image from "next/image";
+import { useState } from "react";
 
 type Props = {
   avatar: string | null;
@@ -6,17 +9,30 @@ type Props = {
   className?: string;
 };
 
+const DEFAULT_ICON =
+  "https://xvbzfiqmzmhyzpmmpybh.supabase.co/storage/v1/object/public/iconBucket/missingIcon.webp";
+
 const Avatar = ({
   avatar,
   username,
   className = "",
 }: Props) => {
   if (avatar) {
+    const [imgSrc, setImgSrc] = useState(avatar || DEFAULT_ICON);
+
+
     return (
-      <img
-        src={avatar}
+      <Image
+        src={imgSrc}
         alt="avatar"
         className={`w-9 h-9 object-cover cursor-default ${className}`}
+        width={9}
+        height={9}
+        onError={() => {
+          if(imgSrc !== DEFAULT_ICON){
+            setImgSrc(DEFAULT_ICON);
+          }
+        }}
       />
     );
   }

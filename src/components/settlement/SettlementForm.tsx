@@ -179,7 +179,7 @@ export default function SettlementForm({
   };
 
   return (
-    <div className="flex justify-center items-center select-none">
+    <div className="w-full flex justify-center items-center select-none">
     <div className="
       w-full max-w-xl
       bg-white
